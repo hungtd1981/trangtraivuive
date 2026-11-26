@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Trại Cá Tầm Suối Lạnh - Đạt Chuẩn VietGAP Quốc Gia</title>
+    <!-- Tải Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tải Font chữ Inter & Plus Jakarta Sans từ Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Tải Phosphor Icons cho hệ thống icon sắc nét -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Cấu hình màu sắc thương hiệu riêng trong Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            teal: '#0f4c5c',      // Xanh nước suối sâu (Chủ đạo)
+                            tealDark: '#09323d',  // Xanh nước sâu đậm
+                            blue: '#1b6ca8',      // Xanh dòng chảy
+                            aqua: '#e6f4f7',      // Xanh băng nhạt nền
+                            vietgap: '#2e7d32',   // Xanh lá chứng nhận VietGAP
+                            vietgapLight: '#e8f5e9',
+                            gold: '#d97706',      // Vàng hổ phách (Trứng cá Caviar / Điểm nhấn)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Hiệu ứng chuyển mượt mà */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Hiệu ứng xuất hiện Tab */
+        .tab-pane {
+            animation: fadeInSlide 0.35s ease-out forwards;
+        }
+
+        @keyframes fadeInSlide {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Tùy chỉnh thanh cuộn */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0f4c5c;
+            border-radius: 9999px;
+        }
+
+        /* Họa tiết sóng nước nhẹ cho Hero */
+        .water-pattern {
+            background-color: #0f4c5c;
+            background-image: radial-gradient(at 80% 0%, hsla(198, 72%, 38%, 0.45) 0px, transparent 50%),
+                              radial-gradient(at 0% 100%, hsla(142, 46%, 34%, 0.25) 0px, transparent 50%);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-brand-teal selection:text-white">
+
+    <!-- ==================== THANH QUẢN TRỊ ADMIN BAR (HIỆN KHI ĐÃ ĐĂNG NHẬP) ==================== -->
+    <div id="admin-top-bar" class="hidden bg-slate-900 text-white border-b border-amber-500/40 px-4 py-2.5 sticky top-0 z-[60] shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5">
+                <span class="inline-flex items-center gap-1.5 bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full text-xs font-extrabold tracking-wide">
+                    <i class="ph-fill ph-shield-check"></i> CHẾ ĐỘ QUẢN TRỊ (ADMIN)
+                </span>
+                <span class="text-xs text-slate-300 hidden md:inline">Mọi thay đổi được lưu tự động vào trình duyệt và có thể xuất bản thành file HTML mới.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openAdminCMS('general')" class="inline-flex items-center gap-1.5 bg-brand-vietgap hover:bg-green-700 text-white px-3.5 py-1.5 rounded-xl text-xs font-bold shadow transition-all">
+                    <i class="ph-bold ph-sliders-horizontal"></i> Mở Bảng Điều Khiển CMS
+                </button>
+                <button onclick="exportUpdatedHTML()" title="Tải về file index.html đã nhúng sẵn dữ liệu mới nhất để đưa lên GitHub Pages" class="inline-flex items-center gap-1.5 bg-sky-600 hover:bg-sky-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold transition-all">
+                    <i class="ph-bold ph-download-simple"></i> <span class="hidden sm:inline">Xuất HTML</span>
+                </button>
+                <button onclick="logoutAdmin()" class="inline-flex items-center gap-1.5 bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white px-3 py-1.5 rounded-xl text-xs font-semibold border border-slate-700 transition-all">
+                    <i class="ph-bold ph-sign-out"></i> Đăng xuất
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== THANH ĐIỀU HƯỚNG CỐ ĐỊNH (HEADER) ==================== -->
+    <header id="main-header" class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm transition-all">
+        <!-- Thanh thông báo chứng nhận trên cùng -->
+        <div class="bg-brand-tealDark text-white text-xs py-1.5 px-4">
+            <div class="max-w-7xl mx-auto flex flex-wrap justify-between items-center gap-2">
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 bg-brand-vietgap px-2 py-0.5 rounded-full font-semibold text-[11px] tracking-wide">
+                        <i class="ph-fill ph-seal-check"></i> <span id="cms-top-badge">CHỨNG NHẬN VIETGAP QUỐC GIA</span>
+                    </span>
+                    <span id="cms-top-tagline" class="hidden sm:inline text-slate-200">Nguồn nước suối lạnh tự nhiên 18°C - 24°C • Không kháng sinh cấm</span>
+                </div>
+                <div class="flex items-center gap-4 text-slate-200">
+                    <a id="cms-top-hotline-link" href="tel:0988123456" class="hover:text-white flex items-center gap-1 font-medium">
+                        <i class="ph-fill ph-phone-call text-emerald-400"></i> <span id="cms-top-hotline-text">Hotline Sỉ/Lẻ: 0988.123.456</span>
+                    </a>
+                    <button onclick="handleAdminButtonClick()" id="header-admin-btn" class="inline-flex items-center gap-1 bg-white/10 hover:bg-white/20 text-amber-300 px-2.5 py-0.5 rounded-lg text-[11px] font-semibold transition-colors">
+                        <i class="ph-bold ph-user-gear"></i> <span id="header-admin-btn-text">Quản trị viên</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Thanh Menu chính -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16 md:h-20">
+                <!-- Logo & Tên Thương Hiệu -->
+                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('intro')">
+                    <div class="w-11 h-11 md:w-12 md:h-12 rounded-2xl bg-gradient-to-br from-brand-teal to-brand-blue flex items-center justify-center text-white shadow-md">
+                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M2 12c3-4 7-6 12-6 3 0 5.5 1.5 8 6-2.5 4.5-5 6-8 6-5 0-9-2-12-6z" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M18 12l4-3v6l-4-3z" fill="currentColor"/>
+                            <circle cx="7" cy="11" r="1" fill="currentColor"/>
+                            <path d="M11 8l1.5-2.5M14 8.5l1.5-2" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span id="cms-brand-name" class="font-heading font-extrabold text-lg md:text-xl text-brand-teal tracking-tight block leading-none">
+                            CÁ TẦM SUỐI LẠNH
+                        </span>
+                        <span id="cms-brand-subtitle" class="text-xs font-medium text-brand-vietgap flex items-center gap-1 mt-1">
+                            <i class="ph-fill ph-check-circle"></i> Trang Trại Chuẩn VietGAP
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Điều hướng Tab trên Desktop -->
+                <nav class="hidden lg:flex items-center bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80" aria-label="Tabs chính">
+                    <button onclick="switchTab('intro')" id="nav-btn-intro" class="tab-nav-btn active px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 bg-brand-teal text-white shadow-sm">
+                        <i class="ph-bold ph-video-camera"></i> Giới thiệu & Quy trình VietGAP
+                    </button>
+                    <button onclick="switchTab('dealers')" id="nav-btn-dealers" class="tab-nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-teal">
+                        <i class="ph-bold ph-storefront"></i> Hệ thống Đại lý Phân phối
+                    </button>
+                    <button onclick="switchTab('contact')" id="nav-btn-contact" class="tab-nav-btn px-4 py-2 rounded-xl text-sm font-semibold transition-all flex items-center gap-2 text-slate-600 hover:text-brand-teal">
+                        <i class="ph-bold ph-address-book"></i> Đầu mối Liên hệ & Đặt hàng
+                    </button>
+                </nav>
+
+                <!-- Nút chế độ xem toàn trang & Gọi nhanh -->
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <button onclick="toggleFullPageMode()" id="btn-view-all" title="Chuyển đổi giữa xem từng Tab hoặc xem toàn bộ trang" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl border border-slate-300 text-slate-700 hover:border-brand-teal hover:text-brand-teal text-xs font-semibold transition-colors">
+                        <i class="ph-bold ph-rows"></i> <span>Xem tất cả</span>
+                    </button>
+                    <a id="cms-header-call-btn" href="tel:0988123456" class="inline-flex items-center gap-2 bg-brand-vietgap hover:bg-green-800 text-white px-4 py-2.5 rounded-xl text-sm font-semibold shadow-sm transition-all active:scale-95">
+                        <i class="ph-fill ph-phone-outgoing text-base"></i>
+                        <span class="hidden sm:inline">Gọi Đặt Cá</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Thanh Tab cuộn ngang tối ưu cho Mobile & Tablet -->
+            <div class="flex lg:hidden overflow-x-auto gap-2 pb-3 pt-1 no-scrollbar">
+                <button onclick="switchTab('intro')" id="mob-btn-intro" class="mob-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-brand-teal text-white flex items-center gap-1.5">
+                    <i class="ph-bold ph-video-camera"></i> Giới thiệu & VietGAP
+                </button>
+                <button onclick="switchTab('dealers')" id="mob-btn-dealers" class="mob-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 flex items-center gap-1.5">
+                    <i class="ph-bold ph-storefront"></i> Đại lý Phân phối
+                </button>
+                <button onclick="switchTab('contact')" id="mob-btn-contact" class="mob-tab-btn shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold bg-slate-100 text-slate-700 flex items-center gap-1.5">
+                    <i class="ph-bold ph-address-book"></i> Liên hệ & Báo giá
+                </button>
+                <button onclick="toggleFullPageMode()" id="mob-btn-view-all" class="shrink-0 px-3.5 py-2 rounded-xl text-xs font-semibold border border-slate-300 text-slate-600 flex items-center gap-1.5">
+                    <i class="ph-bold ph-rows"></i> Xem toàn trang
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ==================== NỘI DUNG CHÍNH (3 TABS) ==================== -->
+    <main class="min-h-screen">
+
+        <!-- =================================================================
+             TAB 1: GIỚI THIỆU TRANG TRẠI & QUY TRÌNH VIETGAP
+             ================================================================= -->
+        <section id="tab-intro" class="tab-pane block">
+            
+            <!-- 1.1 Hero Banner -->
+            <div class="water-pattern text-white relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20 relative z-10">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                        <!-- Cột nội dung chữ -->
+                        <div class="lg:col-span-7 space-y-6">
+                            <div class="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm border border-white/20 px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium text-emerald-200">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                                <span id="cms-hero-pill">Hệ thống bể chảy tràn nước suối đầu nguồn 24/7</span>
+                            </div>
+                            
+                            <h1 class="font-heading font-extrabold text-3xl sm:text-4xl lg:text-5xl leading-tight tracking-tight">
+                                <span id="cms-hero-title-1">Tinh Hoa Cá Tầm Nước Lạnh</span> <br class="hidden sm:inline">
+                                <span id="cms-hero-title-2" class="text-sky-300">Nuôi Chuẩn VietGAP</span>
+                            </h1>
+                            
+                            <p id="cms-hero-desc" class="text-slate-200 text-base sm:text-lg leading-relaxed max-w-2xl">
+                                Được nuôi dưỡng hoàn toàn trong dòng nước suối lạnh tinh khiết từ đỉnh núi cao, kiểm soát nghiêm ngặt từ con giống, thức ăn bổ sung Vitamin C tự nhiên đến quy trình thu hoạch đạt chuẩn VietGAP — mang lại thớ thịt dai giòn, sụn ngọt thanh và giàu Omega-3.
+                            </p>
+
+                            <div class="flex flex-wrap gap-3 pt-2">
+                                <a href="#video-showcase" class="inline-flex items-center gap-2 bg-white text-brand-teal hover:bg-sky-50 px-6 py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg transition-all">
+                                    <i class="ph-fill ph-play-circle text-xl text-brand-blue"></i> Xem Video Trang Trại
+                                </a>
+                                <button onclick="switchTab('dealers')" class="inline-flex items-center gap-2 bg-brand-vietgap hover:bg-green-700 text-white px-6 py-3.5 rounded-2xl font-bold text-sm sm:text-base shadow-lg transition-all border border-emerald-400/30">
+                                    <i class="ph-bold ph-map-pin"></i> Tìm Điểm Bán Gần Nhất
+                                </button>
+                            </div>
+
+                            <!-- Chứng nhận & Chỉ số nhanh -->
+                            <div class="grid grid-cols-3 gap-4 pt-4 border-t border-white/15 max-w-xl">
+                                <div>
+                                    <div id="cms-stat-1-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-sky-300">18–24°C</div>
+                                    <div id="cms-stat-1-lbl" class="text-xs text-slate-300 mt-0.5">Nhiệt độ nước suối quanh năm</div>
+                                </div>
+                                <div>
+                                    <div id="cms-stat-2-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-emerald-300">100%</div>
+                                    <div id="cms-stat-2-lbl" class="text-xs text-slate-300 mt-0.5">Đạt chuẩn vệ sinh VietGAP</div>
+                                </div>
+                                <div>
+                                    <div id="cms-stat-3-val" class="font-heading font-extrabold text-2xl sm:text-3xl text-amber-300">24/7</div>
+                                    <div id="cms-stat-3-lbl" class="text-xs text-slate-300 mt-0.5">Nước chảy tràn giàu Oxy hòa tan</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Cột thẻ chứng nhận VietGAP trực quan -->
+                        <div class="lg:col-span-5">
+                            <div class="bg-white/10 backdrop-blur-md border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+                                <div id="cms-vietgap-code" class="absolute -top-4 -right-4 bg-brand-vietgap text-white px-4 py-1.5 rounded-2xl text-xs font-bold shadow-lg flex items-center gap-1.5">
+                                    <i class="ph-fill ph-seal-check text-base"></i> MÃ SỐ VIETGAP: VG-TS-2026
+                                </div>
+                                <img id="cms-hero-image" src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80" 
+                                     onerror="this.src='https://placehold.co/800x520/0f4c5c/ffffff?text=Trang+Trai+Ca+Tam+VietGAP'"
+                                     alt="Mô hình bể nuôi cá tầm nước suối lạnh" 
+                                     class="w-full h-60 sm:h-72 object-cover rounded-2xl shadow-md mb-5">
+                                
+                                <div class="space-y-3">
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center shrink-0 mt-0.5">
+                                            <i class="ph-bold ph-drop"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-sm text-white">Nguồn nước suối tự nhiên đầu nguồn</h3>
+                                            <p class="text-xs text-slate-300 mt-0.5">Nước chảy liên tục qua hệ thống bể bậc thang, loại bỏ hoàn toàn mùi bùn tanh.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-300 flex items-center justify-center shrink-0 mt-0.5">
+                                            <i class="ph-bold ph-shield-check"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-bold text-sm text-white">Nhật ký điện tử & Truy xuất nguồn gốc</h3>
+                                            <p class="text-xs text-slate-300 mt-0.5">Ghi chép minh bạch từng lô giống, khẩu phần ăn và kiểm định chất lượng nước hàng ngày.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.2 Khu vực Video Giới Thiệu Trang Trại & Quy Trình VietGAP -->
+            <div id="video-showcase" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+                <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                    <div>
+                        <span class="text-brand-vietgap font-bold text-xs uppercase tracking-wider bg-brand-vietgapLight px-3 py-1 rounded-full">
+                            Hình ảnh thực tế tại trang trại
+                        </span>
+                        <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
+                            Video Giới Thiệu Mô Hình Nuôi Cá Tầm VietGAP
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base mt-1">
+                            Khám phá quy trình nuôi cá tầm trong dòng nước suối lạnh tự nhiên và quy chuẩn kiểm định xuất bán.
+                        </p>
+                    </div>
+
+                    <!-- Nút mở công cụ quản lý video (Mở CMS nếu đã đăng nhập, hoặc mở modal thử nhanh) -->
+                    <button onclick="isAdminLoggedIn ? openAdminCMS('videos') : toggleVideoConfigModal()" class="self-start md:self-auto inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-300 transition-colors">
+                        <i class="ph-bold ph-link"></i> <span id="video-manage-btn-label">Thay Link Video Thực Tế (YouTube/MP4)</span>
+                    </button>
+                </div>
+
+                <!-- Khung Trình Phát Video + Danh sách chọn góc quay -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white p-4 sm:p-6 rounded-3xl shadow-sm border border-slate-200">
+                    <!-- Trình phát Video chính (8 cột) -->
+                    <div class="lg:col-span-8">
+                        <div class="relative w-full aspect-video bg-slate-900 rounded-2xl overflow-hidden shadow-inner group" id="video-player-container">
+                            <!-- Nội dung video sẽ được JS render động (Hỗ trợ cả YouTube Embed & HTML5 Video MP4) -->
+                        </div>
+                        <div class="mt-4 flex flex-wrap items-center justify-between gap-2">
+                            <div>
+                                <h3 id="current-video-title" class="font-heading font-bold text-lg text-slate-900">
+                                    Tổng quan Trang trại Cá Tầm Suối Lạnh đạt chuẩn VietGAP
+                                </h3>
+                                <p id="current-video-desc" class="text-sm text-slate-600 mt-0.5">
+                                    Toàn cảnh hệ thống bể tròn chảy tràn dẫn nước suối đầu nguồn từ độ cao trên 1.200m.
+                                </p>
+                            </div>
+                            <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-brand-vietgap bg-brand-vietgapLight px-3 py-1.5 rounded-xl">
+                                <i class="ph-fill ph-check-circle"></i> Đã kiểm định chất lượng
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách chuyển đổi các Video chủ đề (4 cột) -->
+                    <div class="lg:col-span-4 flex flex-col justify-between space-y-3">
+                        <div id="video-playlist-header" class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">
+                            Chọn chuyên mục video (3 video)
+                        </div>
+                        
+                        <div id="video-playlist" class="space-y-3 flex-1">
+                            <!-- Danh sách video render bằng JS -->
+                        </div>
+
+                        <!-- Box ghi chú tiêu chuẩn VietGAP -->
+                        <div class="bg-brand-aqua/70 border border-brand-teal/15 rounded-2xl p-4">
+                            <div class="flex items-center gap-2 text-brand-teal font-bold text-sm">
+                                <i class="ph-fill ph-certificate text-lg"></i> Cam kết minh bạch 100%
+                            </div>
+                            <p class="text-xs text-slate-600 mt-1.5 leading-relaxed">
+                                Khách hàng, đối tác nhà hàng và đại lý có thể đặt lịch tham quan trực tiếp khu nuôi, kiểm tra nhật ký chăm sóc và thử mẫu cá ngay tại trang trại.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.3 Tiêu chuẩn kỹ thuật nuôi VietGAP -->
+            <div class="bg-white border-y border-slate-200 py-14">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center max-w-3xl mx-auto mb-12">
+                        <span class="text-brand-teal font-bold text-xs uppercase tracking-wider bg-brand-aqua px-3 py-1 rounded-full">
+                            Quy chuẩn kỹ thuật nghiêm ngặt
+                        </span>
+                        <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
+                            4 Trụ Cột Tạo Nên Chất Lượng Cá Tầm VietGAP
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base mt-2">
+                            Mỗi con cá tầm xuất trại đều trải qua quy trình nuôi dưỡng khép kín từ 14 đến 24 tháng trong môi trường sinh thái lý tưởng.
+                        </p>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Card 1 -->
+                        <div class="bg-slate-50 hover:bg-white p-6 rounded-3xl border border-slate-200/80 hover:border-brand-teal/40 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-teal text-white flex items-center justify-center text-2xl mb-4 shadow-sm">
+                                <i class="ph-bold ph-waves"></i>
+                            </div>
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Nước Suối Chảy Tràn 24/7</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Nguồn nước suối tự nhiên lưu thông liên tục, hàm lượng Oxy hòa tan luôn đạt trên <strong>7.5 mg/L</strong>, giúp cá vận động khỏe và thịt săn chắc.
+                            </p>
+                        </div>
+
+                        <!-- Card 2 -->
+                        <div class="bg-slate-50 hover:bg-white p-6 rounded-3xl border border-slate-200/80 hover:border-brand-vietgap/40 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-vietgap text-white flex items-center justify-center text-2xl mb-4 shadow-sm">
+                                <i class="ph-bold ph-plant"></i>
+                            </div>
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Dinh Dưỡng & Vitamin C</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Sử dụng thức ăn chuyên dụng độ đạm cao, bổ sung định kỳ <strong>Vitamin C và men vi sinh</strong> tăng sức đề kháng tự nhiên, tuyệt đối không dùng chất tăng trọng.
+                            </p>
+                        </div>
+
+                        <!-- Card 3 -->
+                        <div class="bg-slate-50 hover:bg-white p-6 rounded-3xl border border-slate-200/80 hover:border-brand-blue/40 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 rounded-2xl bg-brand-blue text-white flex items-center justify-center text-2xl mb-4 shadow-sm">
+                                <i class="ph-bold ph-thermometer-cold"></i>
+                            </div>
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Nhiệt Độ Lý Tưởng 18–24°C</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Khí hậu vùng cao mát mẻ quanh năm giữ biên độ nhiệt ổn định, giúp cá tầm sinh trưởng đồng đều, tích lũy dưỡng chất DHA và Collagen tự nhiên.
+                            </p>
+                        </div>
+
+                        <!-- Card 4 -->
+                        <div class="bg-slate-50 hover:bg-white p-6 rounded-3xl border border-slate-200/80 hover:border-amber-500/40 hover:shadow-lg transition-all">
+                            <div class="w-12 h-12 rounded-2xl bg-amber-600 text-white flex items-center justify-center text-2xl mb-4 shadow-sm">
+                                <i class="ph-bold ph-truck"></i>
+                            </div>
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Vận Chuyển Sục Oxy Sống</h3>
+                            <p class="text-sm text-slate-600 mt-2 leading-relaxed">
+                                Cá được làm lạnh nhẹ hạ thân nhiệt trước khi đóng bao/bồn sục oxy tinh khiết, đảm bảo cá khỏe mạnh 100% khi giao tới nhà hàng và đại lý toàn quốc.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1.4 Danh mục sản phẩm cá tầm -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                    <div>
+                        <span class="text-brand-teal font-bold text-xs uppercase tracking-wider bg-brand-aqua px-3 py-1 rounded-full">
+                            Sản phẩm chủ lực tại trại
+                        </span>
+                        <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
+                            Danh Mục Sản Phẩm Cá Tầm VietGAP
+                        </h2>
+                    </div>
+                    <button onclick="switchTab('contact')" class="inline-flex items-center gap-2 text-brand-teal hover:text-brand-blue font-bold text-sm">
+                        Nhận bảng giá sỉ mới nhất hôm nay <i class="ph-bold ph-arrow-right"></i>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Sản phẩm 1: Cá tầm thương phẩm -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=800&q=80" 
+                                 onerror="this.src='https://placehold.co/600x400/0f4c5c/ffffff?text=Ca+Tam+Thuong+Pham+VietGAP'"
+                                 alt="Cá tầm thương phẩm tươi sống" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-brand-vietgap text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                                Bán chạy nhất
+                            </span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-slate-900">Cá Tầm Thương Phẩm Sống</h3>
+                                <p class="text-sm text-slate-600 mt-2">
+                                    Cá đạt độ tuổi từ 15–20 tháng, thịt trắng hồng, sụn giòn sần sật, thích hợp làm lẩu cá tầm, nướng riềng mẻ, sashimi.
+                                </p>
+                                <ul class="mt-4 space-y-2 text-xs sm:text-sm text-slate-700">
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-vietgap"></i> <strong>Size tiêu chuẩn:</strong> 2.0kg – 4.0kg / con</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-vietgap"></i> <strong>Size đại (Tiệc/Nhà hàng):</strong> 4.5kg – 7.0kg / con</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-vietgap"></i> <strong>Quy cách:</strong> Bơi sống sục oxy hoặc làm sạch hút chân không</li>
+                                </ul>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-500">Giá sỉ tại trại: Liên hệ</span>
+                                <button onclick="goToOrderWithProduct('Cá tầm thương phẩm (2kg - 4kg)')" class="px-4 py-2 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-xs font-bold transition-colors">
+                                    Đặt báo giá
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sản phẩm 2: Cá tầm giống chất lượng cao -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1535591273668-578e31182c4f?auto=format&fit=crop&w=800&q=80" 
+                                 onerror="this.src='https://placehold.co/600x400/1b6ca8/ffffff?text=Ca+Tam+Giong+Chuan+VietGAP'"
+                                 alt="Cá tầm giống khỏe mạnh" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-brand-blue text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                                Tỷ lệ sống >95%
+                            </span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-slate-900">Cá Tầm Giống Thuần Chủng</h3>
+                                <p class="text-sm text-slate-600 mt-2">
+                                    Cá giống (cá tầm Nga, cá tầm Siberi) đã qua giai đoạn ương dưỡng ổn định, quen thức ăn công nghiệp, kháng bệnh tốt.
+                                </p>
+                                <ul class="mt-4 space-y-2 text-xs sm:text-sm text-slate-700">
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-blue"></i> <strong>Kích cỡ:</strong> 10cm – 15cm (20g – 50g/con)</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-blue"></i> <strong>Hỗ trợ:</strong> Chuyển giao kỹ thuật xử lý nước bể nuôi</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-brand-blue"></i> <strong>Giấy tờ:</strong> Đầy đủ giấy kiểm dịch thủy sản</li>
+                                </ul>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-500">Cung ứng quanh năm</span>
+                                <button onclick="goToOrderWithProduct('Cá tầm giống (10cm - 15cm)')" class="px-4 py-2 rounded-xl bg-brand-blue hover:bg-sky-800 text-white text-xs font-bold transition-colors">
+                                    Tư vấn giống
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sản phẩm 3: Trứng cá tầm Caviar & Cá tầm cắt khúc -->
+                    <div class="bg-white rounded-3xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all flex flex-col">
+                        <div class="relative h-56 overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?auto=format&fit=crop&w=800&q=80" 
+                                 onerror="this.src='https://placehold.co/600x400/d97706/ffffff?text=Trung+Ca+Tam+Caviar+%26+So+Che'"
+                                 alt="Trứng cá tầm và cá tầm phi lê" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+                            <span class="absolute top-3 left-3 bg-amber-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                                Cao cấp & Tiện lợi
+                            </span>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h3 class="font-heading font-bold text-xl text-slate-900">Trứng Cá Tầm & Phi Lê Cấp Đông</h3>
+                                <p class="text-sm text-slate-600 mt-2">
+                                    Trứng cá tầm muối nhẹ (Caviar) từ cá hậu bị trên 6 năm tuổi và cá tầm cắt khúc/phi lê cấp đông sâu -35°C giữ trọn vị tươi.
+                                </p>
+                                <ul class="mt-4 space-y-2 text-xs sm:text-sm text-slate-700">
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-amber-600"></i> <strong>Trứng cá Caviar:</strong> Hộp thiếc 30g, 50g, 100g</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-amber-600"></i> <strong>Cá tầm cắt khúc:</strong> Khay hút chân không 500g – 1kg</li>
+                                    <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-amber-600"></i> <strong>Tiêu chuẩn:</strong> Đạt chuẩn HACCP & VietGAP</li>
+                                </ul>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <span class="text-xs font-semibold text-slate-500">Giao lạnh toàn quốc</span>
+                                <button onclick="goToOrderWithProduct('Trứng cá tầm Caviar / Phi lê cấp đông')" class="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-colors">
+                                    Đặt sản phẩm
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 2: HỆ THỐNG ĐẠI LÝ PHÂN PHỐI
+             ================================================================= -->
+        <section id="tab-dealers" class="tab-pane hidden py-12 bg-slate-50 border-t border-slate-200/70">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Tiêu đề Tab 2 -->
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                    <div>
+                        <span class="text-brand-vietgap font-bold text-xs uppercase tracking-wider bg-brand-vietgapLight px-3 py-1 rounded-full">
+                            Mạng lưới phân phối chính thức
+                        </span>
+                        <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
+                            Hệ Thống Đại Lý & Điểm Bán Cá Tầm VietGAP
+                        </h2>
+                        <p class="text-slate-600 text-sm sm:text-base mt-1">
+                            Cá tầm tươi sống được vận chuyển trực tiếp bằng xe bồn sục oxy từ trang trại đến các đại lý và chuỗi nhà hàng mỗi sáng.
+                        </p>
+                    </div>
+                    <a href="#dealer-register-form" class="self-start md:self-auto inline-flex items-center gap-2 bg-brand-teal hover:bg-brand-tealDark text-white px-5 py-3 rounded-2xl text-sm font-bold shadow-sm transition-all">
+                        <i class="ph-bold ph-handshake"></i> Đăng Ký Mở Đại Lý / Nhập Sỉ
+                    </a>
+                </div>
+
+                <!-- Thanh Bộ Lọc Khu Vực & Tìm Kiếm -->
+                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-sm border border-slate-200 mb-8">
+                    <div class="flex flex-col lg:flex-row gap-4 justify-between items-stretch lg:items-center">
+                        <!-- Các nút lọc khu vực -->
+                        <div class="flex flex-wrap gap-2" id="region-filters">
+                            <button onclick="filterDealers('all')" data-region="all" class="region-btn active px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-brand-teal text-white transition-all">
+                                Tất cả khu vực (6)
+                            </button>
+                            <button onclick="filterDealers('north')" data-region="north" class="region-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                                Hà Nội & Miền Bắc
+                            </button>
+                            <button onclick="filterDealers('central')" data-region="central" class="region-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                                Đà Nẵng & Miền Trung
+                            </button>
+                            <button onclick="filterDealers('south')" data-region="south" class="region-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all">
+                                TP.HCM & Miền Nam
+                            </button>
+                        </div>
+
+                        <!-- Ô tìm kiếm theo tên hoặc địa chỉ -->
+                        <div class="relative w-full lg:w-80">
+                            <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                            <input type="text" id="dealer-search-input" onkeyup="searchDealers()" placeholder="Tìm tên đại lý, quận, tỉnh thành..." 
+                                   class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal focus:ring-2 focus:ring-brand-teal/20">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lưới hiển thị Danh sách Đại lý -->
+                <div id="dealers-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                    <!-- Thẻ đại lý sẽ được JS render từ danh sách dữ liệu -->
+                </div>
+
+                <!-- Form Đăng Ký Trở Thành Đại Lý / Đối Tác Nhà Hàng -->
+                <div id="dealer-register-form" class="bg-gradient-to-br from-brand-teal to-brand-tealDark rounded-3xl p-6 sm:p-10 text-white shadow-xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-5 space-y-4">
+                            <span class="inline-flex items-center gap-1.5 bg-white/15 px-3 py-1 rounded-full text-xs font-semibold text-emerald-300">
+                                <i class="ph-fill ph-sparkle"></i> Chính sách chiết khấu tận gốc trang trại
+                            </span>
+                            <h3 class="font-heading font-extrabold text-2xl sm:text-3xl leading-snug">
+                                Hợp Tác Phân Phối Cá Tầm VietGAP
+                            </h3>
+                            <p class="text-slate-200 text-sm leading-relaxed">
+                                Chúng tôi tìm kiếm đối tác là vựa hải sản, chuỗi nhà hàng, siêu thị thực phẩm sạch trên toàn quốc với nguồn cung ổn định quanh năm.
+                            </p>
+                            <ul class="space-y-2.5 text-sm text-slate-100 pt-2">
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-check-circle text-emerald-400 text-lg"></i> Chiết khấu giá gốc tận trại không qua trung gian</li>
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-check-circle text-emerald-400 text-lg"></i> Hỗ trợ tư vấn lắp đặt bể kính sục oxy trưng bày</li>
+                                <li class="flex items-center gap-2.5"><i class="ph-fill ph-check-circle text-emerald-400 text-lg"></i> Cung cấp đầy đủ giấy chứng nhận VietGAP & Hóa đơn VAT</li>
+                            </ul>
+                        </div>
+
+                        <div class="lg:col-span-7 bg-white text-slate-800 p-6 sm:p-8 rounded-2xl shadow-lg">
+                            <form onsubmit="handleDealerSubmit(event)" class="space-y-4">
+                                <h4 class="font-heading font-bold text-lg text-slate-900">Đăng Ký Nhận Chính Sách Đại Lý</h4>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tên đơn vị / Nhà hàng / Cá nhân *</label>
+                                        <input type="text" required placeholder="VD: Hải Sản Biển Xanh" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Số điện thoại (Zalo) *</label>
+                                        <input type="tel" required placeholder="VD: 0912.345.678" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                    </div>
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Tỉnh / Thành phố kinh doanh *</label>
+                                        <input type="text" required placeholder="VD: Cầu Giấy, Hà Nội" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-slate-700 mb-1">Sản lượng dự kiến / tuần</label>
+                                        <select class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal bg-white">
+                                            <option>Từ 30kg – 100kg / tuần (Nhà hàng)</option>
+                                            <option>Từ 100kg – 500kg / tuần (Đại lý cấp 2)</option>
+                                            <option>Trên 500kg / tuần (Tổng kho / Siêu thị)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Ghi chú thêm (nếu có)</label>
+                                    <textarea rows="2" placeholder="Yêu cầu kích cỡ cá, tần suất giao hàng..." class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal"></textarea>
+                                </div>
+                                <button type="submit" class="w-full py-3 rounded-xl bg-brand-vietgap hover:bg-green-800 text-white font-bold text-sm shadow transition-all flex items-center justify-center gap-2">
+                                    <i class="ph-bold ph-paper-plane-tilt"></i> Gửi Đăng Ký Đối Tác
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================================================================
+             TAB 3: ĐẦU MỐI LIÊN HỆ & ĐẶT HÀNG
+             ================================================================= -->
+        <section id="tab-contact" class="tab-pane hidden py-12 bg-white border-t border-slate-200/70">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Tiêu đề Tab 3 -->
+                <div class="mb-10">
+                    <span class="text-brand-teal font-bold text-xs uppercase tracking-wider bg-brand-aqua px-3 py-1 rounded-full">
+                        Kết nối trực tiếp với trang trại
+                    </span>
+                    <h2 class="font-heading font-extrabold text-2xl sm:text-3xl text-slate-900 mt-2">
+                        Đầu Mối Liên Hệ & Công Cụ Dự Toán Đặt Hàng
+                    </h2>
+                    <p class="text-slate-600 text-sm sm:text-base mt-1">
+                        Liên hệ đúng bộ phận chuyên trách để được xử lý đơn hàng nhanh chóng và chính xác nhất.
+                    </p>
+                </div>
+
+                <!-- 3 Thẻ Đầu Mối Chuyên Trách -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- Đầu mối 1: Kinh doanh & Đơn hàng sỉ/lẻ -->
+                    <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200 hover:border-brand-teal transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-brand-teal text-white text-xs font-bold px-3 py-1 rounded-full">Kinh Doanh & Đơn Hàng</span>
+                                <i class="ph-duotone ph-shopping-cart text-2xl text-brand-teal"></i>
+                            </div>
+                            <!-- [CẤU HÌNH THƯƠNG HIỆU]: Thông tin đầu mối kinh doanh -->
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Mr. Nguyễn Văn Hùng</h3>
+                            <p class="text-xs font-medium text-brand-blue mt-0.5">Trưởng phòng Kinh doanh & Điều phối xe lạnh</p>
+                            <p class="text-sm text-slate-600 mt-3">
+                                Phụ trách báo giá cá tầm thương phẩm sỉ/lẻ, lịch xe bồn sục oxy giao hàng đi các tỉnh và hợp đồng nhà hàng.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+                            <a href="tel:0988123456" class="w-full py-2.5 px-4 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-fill ph-phone-call"></i> 0988.123.456
+                            </a>
+                            <a href="https://zalo.me/0988123456" target="_blank" rel="noopener" class="w-full py-2 px-4 rounded-xl bg-sky-100 hover:bg-sky-200 text-sky-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-bold ph-chat-circle-dots"></i> Nhắn Zalo Báo Giá Nhanh
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Đầu mối 2: Kỹ thuật nuôi & Tư vấn con giống -->
+                    <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200 hover:border-brand-vietgap transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-brand-vietgap text-white text-xs font-bold px-3 py-1 rounded-full">Kỹ Thuật & Con Giống</span>
+                                <i class="ph-duotone ph-dna text-2xl text-brand-vietgap"></i>
+                            </div>
+                            <!-- [CẤU HÌNH THƯƠNG HIỆU]: Thông tin đầu mối kỹ thuật -->
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Kỹ sư Trần Minh Tuấn</h3>
+                            <p class="text-xs font-medium text-brand-vietgap mt-0.5">Phụ trách Kỹ thuật VietGAP & Trại giống</p>
+                            <p class="text-sm text-slate-600 mt-3">
+                                Tư vấn cung cấp cá tầm giống thuần chủng, hướng dẫn kỹ thuật thiết kế bể chảy tràn và chăm sóc cá nước lạnh.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+                            <a href="tel:0977654321" class="w-full py-2.5 px-4 rounded-xl bg-brand-vietgap hover:bg-green-800 text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-fill ph-phone-call"></i> 0977.654.321
+                            </a>
+                            <a href="https://zalo.me/0977654321" target="_blank" rel="noopener" class="w-full py-2 px-4 rounded-xl bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-bold ph-chat-circle-dots"></i> Zalo Tư Vấn Kỹ Thuật
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Đầu mối 3: Quản lý trang trại & Tham quan -->
+                    <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200 hover:border-brand-blue transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-brand-blue text-white text-xs font-bold px-3 py-1 rounded-full">Quản Lý Trang Trại</span>
+                                <i class="ph-duotone ph-buildings text-2xl text-brand-blue"></i>
+                            </div>
+                            <!-- [CẤU HÌNH THƯƠNG HIỆU]: Thông tin quản lý trang trại -->
+                            <h3 class="font-heading font-bold text-lg text-slate-900">Ms. Lê Thu Hà</h3>
+                            <p class="text-xs font-medium text-brand-blue mt-0.5">Điều hành Trang trại & Đối ngoại VietGAP</p>
+                            <p class="text-sm text-slate-600 mt-3">
+                                Tiếp nhận đăng ký tham quan thực tế khu nuôi, cung cấp hồ sơ kiểm định chất lượng và hợp đồng phân phối độc quyền.
+                            </p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+                            <a href="tel:0911223344" class="w-full py-2.5 px-4 rounded-xl bg-brand-blue hover:bg-sky-800 text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-fill ph-phone-call"></i> 0911.223.344
+                            </a>
+                            <a href="mailto:lienhe@catamsuoilanh.vn" class="w-full py-2 px-4 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-bold ph-envelope-simple"></i> lienhe@catamsuoilanh.vn
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 Thẻ Đầu Mối Chuyên Trách (Render động từ dữ liệu CMS) -->
+                <div id="contacts-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- Nội dung đầu mối liên hệ được render bởi JS -->
+                </div>
+
+                <!-- Khu vực Form Đặt Hàng / Dự Toán Nhanh & Bản Đồ Vị Trí Trang Trại -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Form Dự Toán & Đặt Hàng Nhanh (7 cột) -->
+                    <div class="lg:col-span-7 bg-slate-50 p-6 sm:p-8 rounded-3xl border border-slate-200 shadow-sm">
+                        <h3 class="font-heading font-bold text-xl text-slate-900 flex items-center gap-2">
+                            <i class="ph-fill ph-calculator text-brand-teal text-2xl"></i>
+                            Phiếu Đặt Hàng & Ước Tính Chi Phí Nhanh
+                        </h3>
+                        <p class="text-xs sm:text-sm text-slate-600 mt-1 mb-6">
+                            Chọn quy cách và số lượng để hệ thống ước tính chi phí tham khảo (Giá chính thức ưu đãi hơn cho đơn sỉ).
+                        </p>
+
+                        <form onsubmit="handleQuickOrderSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Loại sản phẩm cá tầm *</label>
+                                    <select id="order-product" onchange="calculateOrderEstimate()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:border-brand-teal">
+                                        <option value="210000" data-name="Cá tầm thương phẩm (2kg - 4kg)">Cá tầm thương phẩm (Size 2kg – 4kg)</option>
+                                        <option value="230000" data-name="Cá tầm thương phẩm size đại (4.5kg - 7kg)">Cá tầm thương phẩm size đại (4.5kg – 7kg)</option>
+                                        <option value="260000" data-name="Cá tầm cắt khúc / Phi lê cấp đông">Cá tầm cắt khúc / Phi lê cấp đông</option>
+                                        <option value="18000" data-name="Cá tầm giống (10cm - 15cm / con)">Cá tầm giống (Tính theo con)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Quy cách đóng gói vận chuyển</label>
+                                    <select id="order-packaging" onchange="calculateOrderEstimate()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm bg-white focus:outline-none focus:border-brand-teal">
+                                        <option value="0">Cá bơi sống đóng bao/bồn sục Oxy</option>
+                                        <option value="15000">Sơ chế làm sạch, đóng thùng xốp giữ lạnh (+15k/kg)</option>
+                                        <option value="25000">Cắt khúc hút chân không cấp đông sâu (+25k/kg)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Số lượng đặt (Kg hoặc Con) *</label>
+                                    <input type="number" id="order-quantity" min="1" value="10" oninput="calculateOrderEstimate()" required class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                </div>
+                                <!-- Khung hiển thị tạm tính -->
+                                <div class="bg-brand-aqua border border-brand-teal/20 rounded-2xl px-4 py-2.5 flex flex-col justify-center">
+                                    <span class="text-[11px] font-semibold text-brand-teal uppercase">Ước tính tạm tính (Tham khảo):</span>
+                                    <span id="order-estimate-total" class="font-heading font-extrabold text-xl text-brand-tealDark">2.100.000 đ</span>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Họ tên người nhận *</label>
+                                    <input type="text" id="order-customer-name" required placeholder="Nhập họ tên của bạn" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-700 mb-1">Số điện thoại nhận hàng *</label>
+                                    <input type="tel" id="order-customer-phone" required placeholder="Nhập số điện thoại liên hệ" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Địa chỉ nhận hàng & Thời gian mong muốn *</label>
+                                <input type="text" required placeholder="VD: Số 25 Phố Huế, Hai Bà Trưng, Hà Nội - Giao sáng thứ 7" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                            </div>
+
+                            <button type="submit" class="w-full py-3.5 rounded-2xl bg-brand-teal hover:bg-brand-tealDark text-white font-bold text-sm sm:text-base shadow-md transition-all flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-check-square-offset text-lg"></i> Gửi Yêu Cầu Đặt Hàng Ngay
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Thông tin Địa chỉ Trang Trại & Bản Đồ (5 cột) -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <div class="bg-slate-50 p-6 rounded-3xl border border-slate-200">
+                            <h3 class="font-heading font-bold text-lg text-slate-900 mb-4 flex items-center gap-2">
+                                <i class="ph-fill ph-map-pin-line text-brand-vietgap text-xl"></i>
+                                Địa Chỉ Khu Nuôi Trang Trại
+                            </h3>
+                            
+                            <ul class="space-y-3 text-sm text-slate-700">
+                                <li class="flex items-start gap-3">
+                                    <i class="ph-bold ph-mountains text-brand-teal text-lg shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <strong class="block text-slate-900">Khu Trại Nuôi Chính (Nguồn Suối Lạnh):</strong>
+                                        <span id="cms-farm-address">Thôn Suối Bạc, Xã Ngũ Chỉ Sơn, Thị xã Sa Pa, Tỉnh Lào Cai</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="ph-bold ph-warehouse text-brand-teal text-lg shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <strong class="block text-slate-900">Trạm Trung Chuyển & Sục Oxy:</strong>
+                                        <span id="cms-hub-address">Khu vực Chợ Đầu Mối Thủy Sản Yên Sở, Quận Hoàng Mai, Hà Nội</span>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <i class="ph-bold ph-clock text-brand-teal text-lg shrink-0 mt-0.5"></i>
+                                    <div>
+                                        <strong class="block text-slate-900">Giờ làm việc & Xuất cá:</strong>
+                                        <span id="cms-working-hours">05:00 – 21:00 tất cả các ngày trong tuần (Kể cả Lễ, Tết)</span>
+                                    </div>
+                                </li>
+                            </ul>
+
+                            <!-- Khung Bản đồ chỉ đường nhúng -->
+                            <div class="mt-5 rounded-2xl overflow-hidden border border-slate-300 h-56 bg-slate-200 relative">
+                                <iframe 
+                                    title="Bản đồ khu vực trang trại cá tầm"
+                                    src="https://www.openstreetmap.org/export/embed.html?bbox=103.7800%2C22.3300%2C103.8800%2C22.4000&amp;layer=mapnik&amp;marker=22.3650%2C103.8300" 
+                                    class="w-full h-full border-0"
+                                    loading="lazy">
+                                </iframe>
+                            </div>
+                            <a id="cms-gmaps-link" href="https://maps.google.com/?q=Sa+Pa,+Lao+Cai" target="_blank" rel="noopener" class="mt-3 w-full py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-bold ph-navigation-arrow text-brand-blue"></i> Mở Chỉ Đường Trên Google Maps
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==================== FOOTER CHUYÊN NGHIỆP ==================== -->
+    <footer class="bg-brand-tealDark text-slate-300 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-white/10">
+                <!-- Cột 1: Giới thiệu thương hiệu -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-2.5 text-white">
+                        <div class="w-9 h-9 rounded-xl bg-brand-vietgap flex items-center justify-center">
+                            <i class="ph-fill ph-seal-check text-xl"></i>
+                        </div>
+                        <span id="cms-footer-brand" class="font-heading font-extrabold text-lg tracking-tight">CÁ TẦM SUỐI LẠNH</span>
+                    </div>
+                    <p id="cms-footer-desc" class="text-xs leading-relaxed text-slate-300">
+                        Chuyên nuôi trồng và cung ứng cá tầm nước lạnh đạt chuẩn VietGAP quốc gia. Cam kết 100% nguồn nước suối tự nhiên chảy tràn, không tồn dư kháng sinh, truy xuất nguồn gốc rõ ràng.
+                    </p>
+                </div>
+
+                <!-- Cột 2: Điều hướng nhanh -->
+                <div>
+                    <h4 class="font-heading font-bold text-white text-sm uppercase tracking-wider mb-4">Danh Mục Trang</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li><button onclick="switchTab('intro')" class="hover:text-white transition-colors">Giới thiệu & Video Trang trại</button></li>
+                        <li><button onclick="switchTab('intro')" class="hover:text-white transition-colors">Quy trình nuôi chuẩn VietGAP</button></li>
+                        <li><button onclick="switchTab('dealers')" class="hover:text-white transition-colors">Hệ thống Đại lý Phân phối</button></li>
+                        <li><button onclick="switchTab('contact')" class="hover:text-white transition-colors">Đầu mối Liên hệ & Báo giá sỉ</button></li>
+                    </ul>
+                </div>
+
+                <!-- Cột 3: Cam kết chất lượng -->
+                <div>
+                    <h4 class="font-heading font-bold text-white text-sm uppercase tracking-wider mb-4">Tiêu Chuẩn Chất Lượng</h4>
+                    <ul class="space-y-2.5 text-xs">
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-emerald-400"></i> Chứng nhận VietGAP Thủy sản</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-emerald-400"></i> Kiểm dịch thú y thủy sản từng lô</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-emerald-400"></i> Không chất tăng trọng & kháng sinh cấm</li>
+                        <li class="flex items-center gap-2"><i class="ph-fill ph-check-circle text-emerald-400"></i> Giao sống sục Oxy bảo hành 100%</li>
+                    </ul>
+                </div>
+
+                <!-- Cột 4: Liên hệ trực tiếp -->
+                <div>
+                    <h4 class="font-heading font-bold text-white text-sm uppercase tracking-wider mb-4">Tổng Đài Đặt Hàng</h4>
+                    <div class="space-y-2 text-xs">
+                        <p id="cms-footer-hotline" class="text-white font-bold text-base">Hotline: 0988.123.456</p>
+                        <p id="cms-footer-email">Email: lienhe@catamsuoilanh.vn</p>
+                        <p id="cms-footer-address">Vùng nuôi: Xã Ngũ Chỉ Sơn, Sa Pa, Lào Cai</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400">
+                <p>© 2026 <span id="cms-copyright-brand">Trang Trại Cá Tầm Suối Lạnh VietGAP</span>. Bảo lưu mọi quyền.</p>
+                <div class="flex items-center gap-4">
+                    <button onclick="handleAdminButtonClick()" class="text-amber-300/90 hover:text-amber-200 font-semibold flex items-center gap-1">
+                        <i class="ph-bold ph-lock-key"></i> Đăng nhập Quản trị (CMS)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== MODAL ĐĂNG NHẬP QUẢN TRỊ VIÊN ==================== -->
+    <div id="admin-login-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-200 animate-[fadeInSlide_0.25s_ease-out]">
+            <div class="flex justify-between items-center mb-5">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-brand-teal text-white flex items-center justify-center text-xl">
+                        <i class="ph-fill ph-shield-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-lg text-slate-900">Đăng Nhập Quản Trị</h3>
+                        <p class="text-xs text-slate-500">Hệ thống cập nhật nội dung Trang trại (CMS)</p>
+                    </div>
+                </div>
+                <button onclick="closeAdminLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+
+            <!-- Gợi ý tài khoản mặc định để test ngay -->
+            <div class="bg-brand-aqua/80 border border-brand-teal/20 rounded-2xl p-3.5 mb-5 text-xs text-brand-tealDark flex items-start gap-2.5">
+                <i class="ph-fill ph-info text-lg text-brand-teal shrink-0 mt-0.5"></i>
+                <div>
+                    <p class="font-bold">Tài khoản trải nghiệm mặc định:</p>
+                    <p class="mt-0.5">Tài khoản: <code class="bg-white px-1.5 py-0.5 rounded font-bold text-slate-900">admin</code> • Mật khẩu: <code class="bg-white px-1.5 py-0.5 rounded font-bold text-slate-900">catam2026</code></p>
+                </div>
+            </div>
+
+            <form onsubmit="handleAdminLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tên đăng nhập *</label>
+                    <input type="text" id="admin-username-input" value="admin" required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Mật khẩu *</label>
+                    <input type="password" id="admin-password-input" placeholder="Nhập mật khẩu quản trị..." required class="w-full px-4 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                </div>
+                <div class="flex items-center justify-between pt-1">
+                    <button type="button" onclick="fillDefaultAdminCredentials()" class="text-xs font-semibold text-brand-blue hover:underline">
+                        Điền nhanh tài khoản mẫu
+                    </button>
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white font-bold text-sm shadow-md transition-all flex items-center justify-center gap-2">
+                    <i class="ph-bold ph-sign-in"></i> Đăng Nhập Vào Hệ Thống
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== BẢNG ĐIỀU KHIỂN QUẢN TRỊ (ADMIN CMS MODAL) ==================== -->
+    <div id="admin-cms-modal" class="fixed inset-0 z-[75] hidden bg-slate-950/75 backdrop-blur-sm flex items-center justify-center p-2 sm:p-4">
+        <div class="bg-white rounded-3xl max-w-5xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden">
+            <!-- Header của Bảng Điều Khiển CMS -->
+            <div class="bg-slate-900 text-white px-5 py-4 flex flex-wrap items-center justify-between gap-3 shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center text-xl font-bold">
+                        <i class="ph-fill ph-sliders"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-extrabold text-base sm:text-lg leading-none">Bảng Điều Khiển Quản Trị Nội Dung (CMS)</h3>
+                        <p class="text-[11px] text-slate-400 mt-1">Cập nhật trực tiếp thông tin trang trại, video, đại lý, bảng giá và xuất bản tệp HTML</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="closeAdminCMS()" class="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5">
+                        <i class="ph-bold ph-eye"></i> Xem trang web
+                    </button>
+                </div>
+            </div>
+
+            <!-- Thanh Tabs trong CMS -->
+            <div class="bg-slate-100 px-4 pt-3 border-b border-slate-200 flex overflow-x-auto gap-1.5 shrink-0">
+                <button onclick="switchCMSTab('general')" id="cms-tab-btn-general" class="cms-subtab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-bold bg-white text-brand-teal border-t border-x border-slate-200 flex items-center gap-1.5 shrink-0">
+                    <i class="ph-bold ph-buildings"></i> 1. Thông tin Trang trại & VietGAP
+                </button>
+                <button onclick="switchCMSTab('videos')" id="cms-tab-btn-videos" class="cms-subtab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 shrink-0">
+                    <i class="ph-bold ph-video-camera"></i> 2. Quản lý Video
+                </button>
+                <button onclick="switchCMSTab('dealers')" id="cms-tab-btn-dealers" class="cms-subtab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 shrink-0">
+                    <i class="ph-bold ph-storefront"></i> 3. Quản lý Đại lý
+                </button>
+                <button onclick="switchCMSTab('contacts')" id="cms-tab-btn-contacts" class="cms-subtab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 shrink-0">
+                    <i class="ph-bold ph-currency-circle-dollar"></i> 4. Đầu mối & Bảng giá
+                </button>
+                <button onclick="switchCMSTab('publish')" id="cms-tab-btn-publish" class="cms-subtab-btn px-4 py-2.5 rounded-t-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 flex items-center gap-1.5 shrink-0">
+                    <i class="ph-bold ph-cloud-arrow-up"></i> 5. Xuất bản & Bảo mật
+                </button>
+            </div>
+
+            <!-- Nội dung cuộn bên trong CMS -->
+            <div class="p-5 sm:p-6 overflow-y-auto flex-1 space-y-6 bg-white">
+                
+                <!-- CMS TAB 1: THÔNG TIN CHUNG & CHỈ SỐ VIETGAP -->
+                <div id="cms-pane-general" class="cms-pane space-y-5">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tên Thương Hiệu / Trang Trại</label>
+                            <input type="text" id="edit-brand-name" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Slogan / Nhãn Chứng Nhận Phụ</label>
+                            <input type="text" id="edit-brand-subtitle" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Mã Số Chứng Nhận VietGAP</label>
+                            <input type="text" id="edit-vietgap-code" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Hotline Chính (Hiển thị trên Header & Footer)</label>
+                            <input type="text" id="edit-main-hotline" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tiêu đề Banner Chính (Dòng 1)</label>
+                            <input type="text" id="edit-hero-title-1" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Tiêu đề Banner Chính (Dòng 2 - Nổi bật)</label>
+                            <input type="text" id="edit-hero-title-2" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Đoạn Giới Thiệu Trang Trại (Hero Description)</label>
+                        <textarea id="edit-hero-desc" rows="3" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Link Ảnh Đại Diện Khu Nuôi (Banner Phải)</label>
+                            <input type="url" id="edit-hero-image" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Dòng mô tả trên thanh thông báo đỉnh trang</label>
+                            <input type="text" id="edit-top-tagline" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                    </div>
+
+                    <!-- 3 Chỉ số nổi bật -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200">
+                        <h4 class="text-xs font-extrabold uppercase text-slate-700 mb-3">3 Chỉ Số Nổi Bật Của Trang Trại</h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="space-y-1.5">
+                                <input type="text" id="edit-stat-1-val" placeholder="Giá trị 1 (VD: 18-24°C)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-bold">
+                                <input type="text" id="edit-stat-1-lbl" placeholder="Nhãn mô tả 1" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+                            </div>
+                            <div class="space-y-1.5">
+                                <input type="text" id="edit-stat-2-val" placeholder="Giá trị 2 (VD: 100%)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-bold">
+                                <input type="text" id="edit-stat-2-lbl" placeholder="Nhãn mô tả 2" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+                            </div>
+                            <div class="space-y-1.5">
+                                <input type="text" id="edit-stat-3-val" placeholder="Giá trị 3 (VD: 24/7)" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm font-bold">
+                                <input type="text" id="edit-stat-3-lbl" placeholder="Nhãn mô tả 3" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button onclick="saveCMSGeneral()" class="px-6 py-2.5 rounded-xl bg-brand-vietgap hover:bg-green-800 text-white text-sm font-bold shadow flex items-center gap-2">
+                            <i class="ph-bold ph-floppy-disk"></i> Lưu Thay Đổi Thông Tin Chung
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CMS TAB 2: QUẢN LÝ VIDEO -->
+                <div id="cms-pane-videos" class="cms-pane hidden space-y-6">
+                    <!-- Form thêm/sửa video -->
+                    <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <h4 id="cms-video-form-title" class="font-heading font-bold text-sm text-slate-900">Thêm Video Giới Thiệu Mới</h4>
+                        <input type="hidden" id="cms-edit-video-index" value="-1">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div class="md:col-span-2">
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tiêu đề Video *</label>
+                                <input type="text" id="cms-vid-title" placeholder="VD: Quy trình cho cá tầm ăn theo chuẩn VietGAP" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Thời lượng (VD: 03:20)</label>
+                                <input type="text" id="cms-vid-duration" placeholder="03:20" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Đường dẫn Video (YouTube hoặc file .MP4) *</label>
+                                <input type="url" id="cms-vid-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Link Ảnh Thu Nhỏ (Thumbnail)</label>
+                                <input type="url" id="cms-vid-thumb" placeholder="https://images.unsplash.com/..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Mô tả ngắn nội dung video</label>
+                            <input type="text" id="cms-vid-desc" placeholder="Mô tả chi tiết góc quay tại khu nuôi..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <button onclick="saveCMSVideo()" class="px-4 py-2 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-xs font-bold flex items-center gap-1.5">
+                                <i class="ph-bold ph-plus-circle"></i> <span id="cms-vid-submit-text">Thêm Vào Danh Sách Video</span>
+                            </button>
+                            <button onclick="resetCMSVideoForm()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold text-slate-600">Làm mới form</button>
+                        </div>
+                    </div>
+
+                    <!-- Danh sách video hiện có -->
+                    <div>
+                        <h4 class="font-heading font-bold text-sm text-slate-900 mb-3">Danh Sách Video Đang Hiển Thị Trên Trang</h4>
+                        <div id="cms-videos-list" class="space-y-2.5"></div>
+                    </div>
+                </div>
+
+                <!-- CMS TAB 3: QUẢN LÝ ĐẠI LÝ PHÂN PHỐI -->
+                <div id="cms-pane-dealers" class="cms-pane hidden space-y-6">
+                    <div class="bg-slate-50 p-4 sm:p-5 rounded-2xl border border-slate-200 space-y-3">
+                        <h4 id="cms-dealer-form-title" class="font-heading font-bold text-sm text-slate-900">Thêm Điểm Bán / Đại Lý Phân Phối Mới</h4>
+                        <input type="hidden" id="cms-edit-dealer-index" value="-1">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Tên Đại Lý / Nhà Hàng *</label>
+                                <input type="text" id="cms-dl-name" placeholder="VD: Hải Sản Sạch Tây Hồ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Khu Vực *</label>
+                                <select id="cms-dl-region" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                                    <option value="north">Hà Nội & Miền Bắc</option>
+                                    <option value="central">Đà Nẵng & Miền Trung</option>
+                                    <option value="south">TP.HCM & Miền Nam</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Số Điện Thoại Liên Hệ *</label>
+                                <input type="text" id="cms-dl-phone" placeholder="VD: 0988.111.222" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Loại Hình Phân Phối</label>
+                                <input type="text" id="cms-dl-type" placeholder="VD: Tổng kho phân phối sỉ & lẻ" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Quy Mô / Sản Lượng</label>
+                                <input type="text" id="cms-dl-capacity" placeholder="VD: 300kg/ngày • Bể sục oxy" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Trạng Thái Hàng</label>
+                                <select id="cms-dl-instock" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm bg-white">
+                                    <option value="true">Sẵn cá tươi sống (Còn hàng)</option>
+                                    <option value="false">Nhận đặt trước theo chuyến xe</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Địa Chỉ Chi Tiết *</label>
+                            <input type="text" id="cms-dl-address" placeholder="Số nhà, tên đường, quận/huyện, tỉnh/thành phố..." class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div class="flex items-center gap-2 pt-1">
+                            <button onclick="saveCMSDealer()" class="px-4 py-2 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-xs font-bold flex items-center gap-1.5">
+                                <i class="ph-bold ph-plus-circle"></i> <span id="cms-dl-submit-text">Lưu Đại Lý</span>
+                            </button>
+                            <button onclick="resetCMSDealerForm()" class="px-3 py-2 rounded-xl border border-slate-300 text-xs font-semibold text-slate-600">Làm mới form</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <h4 class="font-heading font-bold text-sm text-slate-900 mb-3">Danh Sách Đại Lý Hiện Tại (<span id="cms-dealers-count">0</span>)</h4>
+                        <div id="cms-dealers-list" class="space-y-2.5"></div>
+                    </div>
+                </div>
+
+                <!-- CMS TAB 4: ĐẦU MỐI LIÊN HỆ & BẢNG GIÁ DỰ TOÁN -->
+                <div id="cms-pane-contacts" class="cms-pane hidden space-y-6">
+                    <!-- Cập nhật bảng giá tham khảo cho công cụ dự toán -->
+                    <div class="bg-brand-aqua/60 p-4 sm:p-5 rounded-2xl border border-brand-teal/20 space-y-4">
+                        <h4 class="font-heading font-bold text-sm text-brand-tealDark flex items-center gap-2">
+                            <i class="ph-fill ph-tag"></i> Bảng Đơn Giá Cá Tầm Tham Khảo (Tự động cập nhật vào Phiếu Dự Toán)
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Size tiêu chuẩn 2–4kg (VNĐ/kg)</label>
+                                <input type="number" id="edit-price-standard" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Size đại 4.5–7kg (VNĐ/kg)</label>
+                                <input type="number" id="edit-price-large" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Cắt khúc / Phi lê (VNĐ/kg)</label>
+                                <input type="number" id="edit-price-fillet" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-700 mb-1">Cá tầm giống 10-15cm (VNĐ/con)</label>
+                                <input type="number" id="edit-price-fingerling" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm font-bold">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cập nhật 3 Đầu mối liên hệ -->
+                    <div class="space-y-3">
+                        <h4 class="font-heading font-bold text-sm text-slate-900">Thông Tin 3 Đầu Mối Phụ Trách</h4>
+                        <div id="cms-contacts-editor" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+                    </div>
+
+                    <!-- Địa chỉ khu nuôi & trạm trung chuyển -->
+                    <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Địa chỉ Khu Trại Nuôi Chính</label>
+                            <input type="text" id="edit-farm-address" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Địa chỉ Trạm Trung Chuyển Oxy</label>
+                            <input type="text" id="edit-hub-address" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Email Liên Hệ Trang Trại</label>
+                            <input type="email" id="edit-farm-email" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Giờ Làm Việc & Xuất Cá</label>
+                            <input type="text" id="edit-working-hours" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button onclick="saveCMSContactsAndPrices()" class="px-6 py-2.5 rounded-xl bg-brand-vietgap hover:bg-green-800 text-white text-sm font-bold shadow flex items-center gap-2">
+                            <i class="ph-bold ph-floppy-disk"></i> Lưu Đầu Mối & Bảng Giá
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CMS TAB 5: SAO LƯU, XUẤT BẢN GITHUB PAGES & ĐỔI MẬT KHẨU -->
+                <div id="cms-pane-publish" class="cms-pane hidden space-y-6">
+                    <!-- Xuất bản tệp HTML tĩnh lên GitHub Pages -->
+                    <div class="bg-gradient-to-r from-brand-teal to-brand-tealDark text-white p-5 sm:p-6 rounded-2xl shadow-md">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div class="space-y-1.5 max-w-xl">
+                                <span class="bg-amber-400 text-slate-950 text-[11px] font-extrabold px-2.5 py-0.5 rounded-full uppercase">Dành cho GitHub Pages / Hosting Tĩnh</span>
+                                <h4 class="font-heading font-bold text-lg">Xuất Bản Tệp <code>index.html</code> Đã Nhúng Dữ Liệu Mới</h4>
+                                <p class="text-xs text-slate-200 leading-relaxed">
+                                    Vì GitHub Pages là trang web tĩnh, sau khi chỉnh sửa nội dung trên máy của bạn, hãy bấm nút <strong>Tải Về File index.html</strong> bên cạnh và tải đè lên kho lưu trữ GitHub để mọi khách truy cập đều thấy nội dung mới nhất.
+                                </p>
+                            </div>
+                            <button onclick="exportUpdatedHTML()" class="shrink-0 px-5 py-3 rounded-xl bg-white text-brand-teal hover:bg-sky-50 font-extrabold text-xs sm:text-sm shadow-lg flex items-center justify-center gap-2">
+                                <i class="ph-bold ph-file-html text-lg"></i> Tải Về File index.html Mới
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Xuất / Nhập cấu hình JSON -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h4 class="font-heading font-bold text-sm text-slate-900 flex items-center gap-2">
+                                <i class="ph-bold ph-export text-brand-blue text-lg"></i> Sao Lưu Dữ Liệu Cấu Hình (.JSON)
+                            </h4>
+                            <p class="text-xs text-slate-600">Tải toàn bộ nội dung trang trại, video, đại lý và bảng giá thành 1 tệp JSON để lưu trữ dự phòng.</p>
+                            <button onclick="exportJSONData()" class="px-4 py-2 rounded-xl bg-brand-blue hover:bg-sky-800 text-white text-xs font-bold flex items-center gap-1.5">
+                                <i class="ph-bold ph-download"></i> Xuất Tệp Cấu Hình .JSON
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h4 class="font-heading font-bold text-sm text-slate-900 flex items-center gap-2">
+                                <i class="ph-bold ph-import text-brand-vietgap text-lg"></i> Khôi Phục Từ Tệp (.JSON)
+                            </h4>
+                            <p class="text-xs text-slate-600">Chọn tệp <code>.json</code> đã sao lưu trước đó để khôi phục nhanh toàn bộ dữ liệu trang web.</p>
+                            <label class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-vietgap hover:bg-green-800 text-white text-xs font-bold cursor-pointer">
+                                <i class="ph-bold ph-upload"></i> Chọn Tệp .JSON Để Nhập
+                                <input type="file" accept=".json" onchange="importJSONData(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Đổi mật khẩu quản trị & Khôi phục mặc định -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-slate-200">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-3">
+                            <h4 class="font-heading font-bold text-sm text-slate-900">Đổi Mật Khẩu Quản Trị Viên</h4>
+                            <div class="flex gap-2">
+                                <input type="password" id="cms-new-password" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)" class="flex-1 px-3 py-2 rounded-xl border border-slate-300 text-xs">
+                                <button onclick="changeAdminPassword()" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold">Cập nhật</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-rose-50/70 p-5 rounded-2xl border border-rose-200 space-y-3">
+                            <h4 class="font-heading font-bold text-sm text-rose-900">Khôi Phục Dữ Liệu Gốc Ban Đầu</h4>
+                            <p class="text-xs text-rose-700">Xóa các chỉnh sửa lưu trong trình duyệt và quay về dữ liệu mẫu ban đầu của trang trại.</p>
+                            <button onclick="resetToDefaultData()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold">Khôi Phục Mặc Định</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL THAY LINK VIDEO THỰC TẾ CHO CHỦ TRẠI ==================== -->
+    <div id="video-config-modal" class="fixed inset-0 z-[70] hidden bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-heading font-extrabold text-lg text-slate-900 flex items-center gap-2">
+                    <i class="ph-fill ph-video-camera text-brand-teal text-xl"></i> Thay Link Video Thực Tế
+                </h3>
+                <button onclick="toggleVideoConfigModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="ph-bold ph-x"></i>
+                </button>
+            </div>
+            <p class="text-xs text-slate-600 mb-4">
+                Dán đường dẫn video YouTube hoặc tệp MP4 quay thực tế tại trang trại của bạn để xem thử ngay trên trình phát. (Đăng nhập <strong>Quản trị viên</strong> để lưu cố định).
+            </p>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Tiêu đề video</label>
+                    <input type="text" id="custom-video-title" placeholder="VD: Toàn cảnh khu bể nuôi cá tầm chuẩn VietGAP" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Đường dẫn Video (YouTube URL hoặc .MP4) *</label>
+                    <input type="url" id="custom-video-url" placeholder="https://www.youtube.com/watch?v=..." class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm focus:outline-none focus:border-brand-teal">
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button onclick="toggleVideoConfigModal()" class="px-4 py-2.5 rounded-xl border border-slate-300 text-slate-700 text-xs font-bold">Hủy</button>
+                    <button onclick="applyCustomVideo()" class="px-5 py-2.5 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-xs font-bold shadow">Phát Video Ngay</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== THÔNG BÁO TOAST NOTIFICATION ==================== -->
+    <div id="toast-notification" class="fixed bottom-5 right-5 z-[90] hidden max-w-sm w-[calc(100%-2.5rem)] bg-slate-900 text-white p-4 rounded-2xl shadow-2xl border border-slate-700 flex items-start gap-3 animate-[fadeInSlide_0.25s_ease-out]">
+        <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 mt-0.5">
+            <i class="ph-fill ph-check-circle text-xl"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+            <h4 id="toast-title" class="font-bold text-sm text-white">Thông báo</h4>
+            <p id="toast-message" class="text-xs text-slate-300 mt-0.5 leading-relaxed"></p>
+        </div>
+        <button onclick="document.getElementById('toast-notification').classList.add('hidden')" class="text-slate-400 hover:text-white">
+            <i class="ph-bold ph-x"></i>
+        </button>
+    </div>
+
+    <!-- ==================== MÃ JAVASCRIPT ĐIỀU KHIỂN TOÀN TRANG & ADMIN CMS ==================== -->
+    <script>
+        /* =========================================================================
+           1. DỮ LIỆU MẶC ĐỊNH CỦA TRANG TRẠI (ĐƯỢC NHÚNG SẴN KHI XUẤT BẢN HTML)
+           ========================================================================= */
+        /* CMS_DATA_START */
+        const DEFAULT_SITE_DATA = {
+            adminCredentials: {
+                username: 'admin',
+                password: 'catam2026'
+            },
+            general: {
+                brandName: 'CÁ TẦM SUỐI LẠNH',
+                brandSubtitle: 'Trang Trại Chuẩn VietGAP',
+                topBadge: 'CHỨNG NHẬN VIETGAP QUỐC GIA',
+                topTagline: 'Nguồn nước suối lạnh tự nhiên 18°C - 24°C • Không kháng sinh cấm',
+                mainHotline: '0988.123.456',
+                heroPill: 'Hệ thống bể chảy tràn nước suối đầu nguồn 24/7',
+                heroTitle1: 'Tinh Hoa Cá Tầm Nước Lạnh',
+                heroTitle2: 'Nuôi Chuẩn VietGAP',
+                heroDesc: 'Được nuôi dưỡng hoàn toàn trong dòng nước suối lạnh tinh khiết từ đỉnh núi cao, kiểm soát nghiêm ngặt từ con giống, thức ăn bổ sung Vitamin C tự nhiên đến quy trình thu hoạch đạt chuẩn VietGAP — mang lại thớ thịt dai giòn, sụn ngọt thanh và giàu Omega-3.',
+                vietgapCode: 'MÃ SỐ VIETGAP: VG-TS-2026',
+                heroImage: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=900&q=80',
+                stat1Val: '18–24°C',
+                stat1Lbl: 'Nhiệt độ nước suối quanh năm',
+                stat2Val: '100%',
+                stat2Lbl: 'Đạt chuẩn vệ sinh VietGAP',
+                stat3Val: '24/7',
+                stat3Lbl: 'Nước chảy tràn giàu Oxy hòa tan',
+                farmAddress: 'Thôn Suối Bạc, Xã Ngũ Chỉ Sơn, Thị xã Sa Pa, Tỉnh Lào Cai',
+                hubAddress: 'Khu vực Chợ Đầu Mối Thủy Sản Yên Sở, Quận Hoàng Mai, Hà Nội',
+                workingHours: '05:00 – 21:00 tất cả các ngày trong tuần (Kể cả Lễ, Tết)',
+                farmEmail: 'lienhe@catamsuoilanh.vn'
+            },
+            videos: [
+                {
+                    id: 'vid1',
+                    title: 'Tổng quan Trang trại Cá Tầm Suối Lạnh chuẩn VietGAP',
+                    duration: '03:45',
+                    desc: 'Toàn cảnh hệ thống bể tròn chảy tràn dẫn nước suối đầu nguồn từ độ cao trên 1.200m, đảm bảo môi trường sống tự nhiên.',
+                    thumbnail: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=400&q=80',
+                    url: 'https://assets.mixkit.co/videos/preview/mixkit-school-of-fish-swimming-in-the-ocean-1188-large.mp4'
+                },
+                {
+                    id: 'vid2',
+                    title: 'Quy trình kiểm soát nguồn nước & Dinh dưỡng Vitamin C',
+                    duration: '02:30',
+                    desc: 'Kỹ sư thủy sản đo chỉ số Oxy hòa tan, nhiệt độ nước 18-24°C và phối trộn Vitamin C tăng đề kháng tự nhiên cho đàn cá.',
+                    thumbnail: 'https://images.unsplash.com/photo-1518837695005-2083093ee35b?auto=format&fit=crop&w=400&q=80',
+                    url: 'https://assets.mixkit.co/videos/preview/mixkit-clear-water-flowing-over-rocks-in-a-river-42817-large.mp4'
+                },
+                {
+                    id: 'vid3',
+                    title: 'Thu hoạch, kiểm định VietGAP & Đóng bồn Oxy xuất bán',
+                    duration: '04:10',
+                    desc: 'Quy trình tuyển chọn cá tầm thương phẩm size 2.5kg - 5kg, kiểm tra sức khỏe và đóng xe bồn sục oxy giao tới đại lý.',
+                    thumbnail: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=400&q=80',
+                    url: 'https://assets.mixkit.co/videos/preview/mixkit-underwater-view-of-fish-swimming-in-a-tank-40831-large.mp4'
+                }
+            ],
+            dealers: [
+                {
+                    name: 'Tổng Kho Thủy Sản Sạch Hoàng Mai',
+                    region: 'north',
+                    type: 'Tổng kho phân phối sỉ & lẻ',
+                    address: 'Khu A2, Chợ Đầu Mối Thủy Sản Yên Sở, Q. Hoàng Mai, Hà Nội',
+                    phone: '0988.123.456',
+                    capacity: '500kg – 1.2 tấn/ngày',
+                    inStock: true
+                },
+                {
+                    name: 'Chuỗi Nhà Hàng Lẩu Cá Tầm Tây Bắc',
+                    region: 'north',
+                    type: 'Nhà hàng & Bán mang về',
+                    address: 'Số 128 Nguyễn Khánh Toàn, Q. Cầu Giấy, Hà Nội',
+                    phone: '0912.889.776',
+                    capacity: 'Cá bơi tại bể kính 2kg - 6kg',
+                    inStock: true
+                },
+                {
+                    name: 'Siêu Thị Thực Phẩm Xanh VietGAP Hải Phòng',
+                    region: 'north',
+                    type: 'Siêu thị & Cửa hàng sạch',
+                    address: 'Số 45 Lê Hồng Phong, Q. Ngô Quyền, TP. Hải Phòng',
+                    phone: '0904.556.112',
+                    capacity: 'Cá sống & Phi lê cấp đông',
+                    inStock: true
+                },
+                {
+                    name: 'Đại Lý Hải Sản Nước Lạnh Sông Hàn',
+                    region: 'central',
+                    type: 'Đại lý phân phối miền Trung',
+                    address: 'Số 210 Đường 2 Tháng 9, Q. Hải Châu, TP. Đà Nẵng',
+                    phone: '0935.778.990',
+                    capacity: '300kg/ngày • Giao hỏa tốc',
+                    inStock: true
+                },
+                {
+                    name: 'Vựa Thủy Sản Cao Cấp Bình Điền - Quận 8',
+                    region: 'south',
+                    type: 'Tổng đại lý phía Nam',
+                    address: 'Nhà lồng F, Chợ Đầu Mối Bình Điền, Q.8, TP. Hồ Chí Minh',
+                    phone: '0909.668.334',
+                    capacity: '800kg/ngày • Xe bồn oxy',
+                    inStock: true
+                },
+                {
+                    name: 'Cửa Hàng Cá Tầm Tươi Sống Thủ Đức',
+                    region: 'south',
+                    type: 'Điểm bán lẻ & Sơ chế sẵn',
+                    address: 'Số 89 Võ Văn Ngân, TP. Thủ Đức, TP. Hồ Chí Minh',
+                    phone: '0938.221.445',
+                    capacity: 'Có sẵn cá size 2kg - 4kg',
+                    inStock: true
+                }
+            ],
+            prices: {
+                standard: 210000,
+                large: 230000,
+                fillet: 260000,
+                fingerling: 18000
+            },
+            contacts: [
+                {
+                    badge: 'Kinh Doanh & Đơn Hàng',
+                    badgeColor: 'bg-brand-teal',
+                    icon: 'ph-shopping-cart',
+                    iconColor: 'text-brand-teal',
+                    name: 'Mr. Nguyễn Văn Hùng',
+                    role: 'Trưởng phòng Kinh doanh & Điều phối xe lạnh',
+                    roleColor: 'text-brand-blue',
+                    desc: 'Phụ trách báo giá cá tầm thương phẩm sỉ/lẻ, lịch xe bồn sục oxy giao hàng đi các tỉnh và hợp đồng nhà hàng.',
+                    phone: '0988.123.456',
+                    btnColor: 'bg-brand-teal hover:bg-brand-tealDark',
+                    secondaryText: 'Nhắn Zalo Báo Giá Nhanh',
+                    secondaryHref: 'https://zalo.me/0988123456'
+                },
+                {
+                    badge: 'Kỹ Thuật & Con Giống',
+                    badgeColor: 'bg-brand-vietgap',
+                    icon: 'ph-dna',
+                    iconColor: 'text-brand-vietgap',
+                    name: 'Kỹ sư Trần Minh Tuấn',
+                    role: 'Phụ trách Kỹ thuật VietGAP & Trại giống',
+                    roleColor: 'text-brand-vietgap',
+                    desc: 'Tư vấn cung cấp cá tầm giống thuần chủng, hướng dẫn kỹ thuật thiết kế bể chảy tràn và chăm sóc cá nước lạnh.',
+                    phone: '0977.654.321',
+                    btnColor: 'bg-brand-vietgap hover:bg-green-800',
+                    secondaryText: 'Zalo Tư Vấn Kỹ Thuật',
+                    secondaryHref: 'https://zalo.me/0977654321'
+                },
+                {
+                    badge: 'Quản Lý Trang Trại',
+                    badgeColor: 'bg-brand-blue',
+                    icon: 'ph-buildings',
+                    iconColor: 'text-brand-blue',
+                    name: 'Ms. Lê Thu Hà',
+                    role: 'Điều hành Trang trại & Đối ngoại VietGAP',
+                    roleColor: 'text-brand-blue',
+                    desc: 'Tiếp nhận đăng ký tham quan thực tế khu nuôi, cung cấp hồ sơ kiểm định chất lượng và hợp đồng phân phối độc quyền.',
+                    phone: '0911.223.344',
+                    btnColor: 'bg-brand-blue hover:bg-sky-800',
+                    secondaryText: 'lienhe@catamsuoilanh.vn',
+                    secondaryHref: 'mailto:lienhe@catamsuoilanh.vn'
+                }
+            ]
+        };
+        /* CMS_DATA_END */
+
+        const STORAGE_KEY = 'catam_vietgap_cms_v1';
+        const SESSION_KEY = 'catam_vietgap_admin_session';
+
+        let siteData = loadSiteData();
+        let isAdminLoggedIn = sessionStorage.getItem(SESSION_KEY) === 'true';
+        let isFullPageMode = false;
+        let currentRegionFilter = 'all';
+
+        function loadSiteData() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    return {
+                        ...DEFAULT_SITE_DATA,
+                        ...parsed,
+                        general: { ...DEFAULT_SITE_DATA.general, ...(parsed.general || {}) },
+                        prices: { ...DEFAULT_SITE_DATA.prices, ...(parsed.prices || {}) },
+                        adminCredentials: { ...DEFAULT_SITE_DATA.adminCredentials, ...(parsed.adminCredentials || {}) }
+                    };
+                }
+            } catch (err) {
+                console.error('Lỗi đọc dữ liệu LocalStorage:', err);
+            }
+            return JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
+        }
+
+        function persistSiteData() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
+            } catch (err) {
+                console.error('Lỗi lưu dữ liệu LocalStorage:', err);
+            }
+            applySiteDataToUI();
+        }
+
+        /* =========================================================================
+           2. ÁP DỤNG DỮ LIỆU CMS LÊN GIAO DIỆN NGƯỜI DÙNG
+           ========================================================================= */
+        function applySiteDataToUI() {
+            const g = siteData.general;
+            const cleanHotline = g.mainHotline.replace(/\./g, '').replace(/\s+/g, '');
+
+            document.title = `${g.brandName} - ${g.brandSubtitle}`;
+            document.getElementById('cms-top-badge').textContent = g.topBadge;
+            document.getElementById('cms-top-tagline').textContent = g.topTagline;
+            document.getElementById('cms-top-hotline-text').textContent = `Hotline Sỉ/Lẻ: ${g.mainHotline}`;
+            document.getElementById('cms-top-hotline-link').href = `tel:${cleanHotline}`;
+            document.getElementById('cms-header-call-btn').href = `tel:${cleanHotline}`;
+
+            document.getElementById('cms-brand-name').textContent = g.brandName;
+            document.getElementById('cms-brand-subtitle').innerHTML = `<i class="ph-fill ph-check-circle"></i> ${g.brandSubtitle}`;
+
+            document.getElementById('cms-hero-pill').textContent = g.heroPill;
+            document.getElementById('cms-hero-title-1').textContent = g.heroTitle1;
+            document.getElementById('cms-hero-title-2').textContent = g.heroTitle2;
+            document.getElementById('cms-hero-desc').textContent = g.heroDesc;
+            document.getElementById('cms-vietgap-code').innerHTML = `<i class="ph-fill ph-seal-check text-base"></i> ${g.vietgapCode}`;
+            document.getElementById('cms-hero-image').src = g.heroImage;
+
+            document.getElementById('cms-stat-1-val').textContent = g.stat1Val;
+            document.getElementById('cms-stat-1-lbl').textContent = g.stat1Lbl;
+            document.getElementById('cms-stat-2-val').textContent = g.stat2Val;
+            document.getElementById('cms-stat-2-lbl').textContent = g.stat2Lbl;
+            document.getElementById('cms-stat-3-val').textContent = g.stat3Val;
+            document.getElementById('cms-stat-3-lbl').textContent = g.stat3Lbl;
+
+            document.getElementById('cms-farm-address').textContent = g.farmAddress;
+            document.getElementById('cms-hub-address').textContent = g.hubAddress;
+            document.getElementById('cms-working-hours').textContent = g.workingHours;
+            document.getElementById('cms-gmaps-link').href = `https://maps.google.com/?q=${encodeURIComponent(g.farmAddress)}`;
+
+            document.getElementById('cms-footer-brand').textContent = g.brandName;
+            document.getElementById('cms-footer-hotline').textContent = `Hotline: ${g.mainHotline}`;
+            document.getElementById('cms-footer-email').textContent = `Email: ${g.farmEmail}`;
+            document.getElementById('cms-footer-address').textContent = `Vùng nuôi: ${g.farmAddress}`;
+            document.getElementById('cms-copyright-brand').textContent = `${g.brandName} (${g.brandSubtitle})`;
+
+            // Cập nhật đơn giá trong dropdown dự toán
+            const p = siteData.prices;
+            const orderProductSelect = document.getElementById('order-product');
+            if (orderProductSelect && orderProductSelect.options.length >= 4) {
+                orderProductSelect.options[0].value = p.standard;
+                orderProductSelect.options[0].text = `Cá tầm thương phẩm (Size 2kg – 4kg) - ${Number(p.standard).toLocaleString('vi-VN')}đ/kg`;
+                orderProductSelect.options[1].value = p.large;
+                orderProductSelect.options[1].text = `Cá tầm thương phẩm size đại (4.5kg – 7kg) - ${Number(p.large).toLocaleString('vi-VN')}đ/kg`;
+                orderProductSelect.options[2].value = p.fillet;
+                orderProductSelect.options[2].text = `Cá tầm cắt khúc / Phi lê cấp đông - ${Number(p.fillet).toLocaleString('vi-VN')}đ/kg`;
+                orderProductSelect.options[3].value = p.fingerling;
+                orderProductSelect.options[3].text = `Cá tầm giống (10cm - 15cm) - ${Number(p.fingerling).toLocaleString('vi-VN')}đ/con`;
+            }
+
+            // Cập nhật nhãn bộ lọc tất cả đại lý
+            const allRegionBtn = document.querySelector('.region-btn[data-region="all"]');
+            if (allRegionBtn) {
+                allRegionBtn.textContent = `Tất cả khu vực (${siteData.dealers.length})`;
+            }
+
+            // Render lại các danh sách động
+            document.getElementById('video-playlist-header').textContent = `Chọn chuyên mục video (${siteData.videos.length} video)`;
+            if (siteData.videos.length > 0) {
+                playFarmVideo(0);
+            }
+            renderDealers();
+            renderContactsGrid();
+            calculateOrderEstimate();
+            updateAdminUIState();
+        }
+
+        function renderContactsGrid() {
+            const grid = document.getElementById('contacts-grid');
+            if (!grid) return;
+            grid.innerHTML = siteData.contacts.map(c => {
+                const cleanPhone = c.phone.replace(/\./g, '').replace(/\s+/g, '');
+                const isMail = c.secondaryHref.startsWith('mailto:');
+                return `
+                    <div class="bg-slate-50 rounded-3xl p-6 border border-slate-200 hover:border-brand-teal transition-all flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="${c.badgeColor} text-white text-xs font-bold px-3 py-1 rounded-full">${c.badge}</span>
+                                <i class="ph-duotone ${c.icon} text-2xl ${c.iconColor}"></i>
+                            </div>
+                            <h3 class="font-heading font-bold text-lg text-slate-900">${c.name}</h3>
+                            <p class="text-xs font-medium ${c.roleColor} mt-0.5">${c.role}</p>
+                            <p class="text-sm text-slate-600 mt-3">${c.desc}</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-slate-200 space-y-2">
+                            <a href="tel:${cleanPhone}" class="w-full py-2.5 px-4 rounded-xl ${c.btnColor} text-white text-sm font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-fill ph-phone-call"></i> ${c.phone}
+                            </a>
+                            <a href="${c.secondaryHref}" ${isMail ? '' : 'target="_blank" rel="noopener"'} class="w-full py-2 px-4 rounded-xl bg-slate-200/80 hover:bg-slate-200 text-slate-800 text-xs font-bold flex items-center justify-center gap-2 transition-colors">
+                                <i class="ph-bold ${isMail ? 'ph-envelope-simple' : 'ph-chat-circle-dots'}"></i> ${c.secondaryText}
+                            </a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        /* =========================================================================
+           3. HỆ THỐNG XÁC THỰC QUẢN TRỊ VIÊN (ADMIN LOGIN / LOGOUT)
+           ========================================================================= */
+        function handleAdminButtonClick() {
+            if (isAdminLoggedIn) {
+                openAdminCMS('general');
+            } else {
+                document.getElementById('admin-login-modal').classList.remove('hidden');
+                setTimeout(() => document.getElementById('admin-password-input').focus(), 100);
+            }
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('admin-login-modal').classList.add('hidden');
+        }
+
+        function fillDefaultAdminCredentials() {
+            document.getElementById('admin-username-input').value = siteData.adminCredentials.username;
+            document.getElementById('admin-password-input').value = siteData.adminCredentials.password;
+        }
+
+        function handleAdminLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('admin-username-input').value.trim();
+            const pass = document.getElementById('admin-password-input').value;
+
+            if (user === siteData.adminCredentials.username && pass === siteData.adminCredentials.password) {
+                isAdminLoggedIn = true;
+                sessionStorage.setItem(SESSION_KEY, 'true');
+                closeAdminLoginModal();
+                updateAdminUIState();
+                openAdminCMS('general');
+                showToast('Đăng nhập quản trị thành công!', 'Bạn có thể chỉnh sửa mọi nội dung của trang trại ngay bây giờ.');
+            } else {
+                showToast('Sai thông tin đăng nhập', 'Tài khoản hoặc mật khẩu không chính xác. Vui lòng thử lại.');
+            }
+        }
+
+        function logoutAdmin() {
+            isAdminLoggedIn = false;
+            sessionStorage.removeItem(SESSION_KEY);
+            closeAdminCMS();
+            updateAdminUIState();
+            showToast('Đã đăng xuất', 'Trang web đã trở về chế độ xem dành cho khách hàng.');
+        }
+
+        function updateAdminUIState() {
+            const topBar = document.getElementById('admin-top-bar');
+            const header = document.getElementById('main-header');
+            const headerBtnText = document.getElementById('header-admin-btn-text');
+            const videoBtnLabel = document.getElementById('video-manage-btn-label');
+
+            if (isAdminLoggedIn) {
+                topBar.classList.remove('hidden');
+                header.classList.remove('top-0');
+                header.classList.add('top-[42px]');
+                headerBtnText.textContent = 'Bảng Quản Trị (CMS)';
+                if (videoBtnLabel) videoBtnLabel.textContent = 'Quản lý Danh sách Video (CMS)';
+            } else {
+                topBar.classList.add('hidden');
+                header.classList.add('top-0');
+                header.classList.remove('top-[42px]');
+                headerBtnText.textContent = 'Quản trị viên';
+                if (videoBtnLabel) videoBtnLabel.textContent = 'Thay Link Video Thực Tế (YouTube/MP4)';
+            }
+        }
+
+        /* =========================================================================
+           4. BẢNG ĐIỀU KHIỂN ADMIN CMS (CHỈNH SỬA TRỰC TIẾP & XUẤT BẢN)
+           ========================================================================= */
+        function openAdminCMS(subTab = 'general') {
+            if (!isAdminLoggedIn) {
+                handleAdminButtonClick();
+                return;
+            }
+            populateCMSForms();
+            switchCMSTab(subTab);
+            document.getElementById('admin-cms-modal').classList.remove('hidden');
+        }
+
+        function closeAdminCMS() {
+            document.getElementById('admin-cms-modal').classList.add('hidden');
+        }
+
+        function switchCMSTab(tabName) {
+            const panes = ['general', 'videos', 'dealers', 'contacts', 'publish'];
+            panes.forEach(p => {
+                const paneEl = document.getElementById(`cms-pane-${p}`);
+                const btnEl = document.getElementById(`cms-tab-btn-${p}`);
+                if (p === tabName) {
+                    paneEl.classList.remove('hidden');
+                    btnEl.classList.add('bg-white', 'text-brand-teal', 'border-t', 'border-x', 'border-slate-200', 'font-bold');
+                    btnEl.classList.remove('text-slate-600');
+                } else {
+                    paneEl.classList.add('hidden');
+                    btnEl.classList.remove('bg-white', 'text-brand-teal', 'border-t', 'border-x', 'border-slate-200', 'font-bold');
+                    btnEl.classList.add('text-slate-600');
+                }
+            });
+        }
+
+        function populateCMSForms() {
+            const g = siteData.general;
+            document.getElementById('edit-brand-name').value = g.brandName;
+            document.getElementById('edit-brand-subtitle').value = g.brandSubtitle;
+            document.getElementById('edit-vietgap-code').value = g.vietgapCode;
+            document.getElementById('edit-main-hotline').value = g.mainHotline;
+            document.getElementById('edit-hero-title-1').value = g.heroTitle1;
+            document.getElementById('edit-hero-title-2').value = g.heroTitle2;
+            document.getElementById('edit-hero-desc').value = g.heroDesc;
+            document.getElementById('edit-hero-image').value = g.heroImage;
+            document.getElementById('edit-top-tagline').value = g.topTagline;
+            document.getElementById('edit-stat-1-val').value = g.stat1Val;
+            document.getElementById('edit-stat-1-lbl').value = g.stat1Lbl;
+            document.getElementById('edit-stat-2-val').value = g.stat2Val;
+            document.getElementById('edit-stat-2-lbl').value = g.stat2Lbl;
+            document.getElementById('edit-stat-3-val').value = g.stat3Val;
+            document.getElementById('edit-stat-3-lbl').value = g.stat3Lbl;
+
+            // Bảng giá & Địa chỉ
+            document.getElementById('edit-price-standard').value = siteData.prices.standard;
+            document.getElementById('edit-price-large').value = siteData.prices.large;
+            document.getElementById('edit-price-fillet').value = siteData.prices.fillet;
+            document.getElementById('edit-price-fingerling').value = siteData.prices.fingerling;
+            document.getElementById('edit-farm-address').value = g.farmAddress;
+            document.getElementById('edit-hub-address').value = g.hubAddress;
+            document.getElementById('edit-farm-email').value = g.farmEmail;
+            document.getElementById('edit-working-hours').value = g.workingHours;
+
+            renderCMSVideosList();
+            renderCMSDealersList();
+            renderCMSContactsEditor();
+        }
+
+        function saveCMSGeneral() {
+            const g = siteData.general;
+            g.brandName = document.getElementById('edit-brand-name').value.trim() || g.brandName;
+            g.brandSubtitle = document.getElementById('edit-brand-subtitle').value.trim() || g.brandSubtitle;
+            g.vietgapCode = document.getElementById('edit-vietgap-code').value.trim() || g.vietgapCode;
+            g.mainHotline = document.getElementById('edit-main-hotline').value.trim() || g.mainHotline;
+            g.heroTitle1 = document.getElementById('edit-hero-title-1').value.trim();
+            g.heroTitle2 = document.getElementById('edit-hero-title-2').value.trim();
+            g.heroDesc = document.getElementById('edit-hero-desc').value.trim();
+            g.heroImage = document.getElementById('edit-hero-image').value.trim() || g.heroImage;
+            g.topTagline = document.getElementById('edit-top-tagline').value.trim();
+            g.stat1Val = document.getElementById('edit-stat-1-val').value.trim();
+            g.stat1Lbl = document.getElementById('edit-stat-1-lbl').value.trim();
+            g.stat2Val = document.getElementById('edit-stat-2-val').value.trim();
+            g.stat2Lbl = document.getElementById('edit-stat-2-lbl').value.trim();
+            g.stat3Val = document.getElementById('edit-stat-3-val').value.trim();
+            g.stat3Lbl = document.getElementById('edit-stat-3-lbl').value.trim();
+
+            persistSiteData();
+            showToast('Đã lưu thông tin chung!', 'Giao diện trang giới thiệu đã được cập nhật ngay lập tức.');
+        }
+
+        // --- Quản lý Video trong CMS ---
+        function renderCMSVideosList() {
+            const listEl = document.getElementById('cms-videos-list');
+            listEl.innerHTML = siteData.videos.map((v, idx) => `
+                <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-brand-teal text-white text-[10px] font-bold px-2 py-0.5 rounded-md">Video #${idx + 1}</span>
+                            <span class="text-xs font-semibold text-slate-500">${v.duration}</span>
+                        </div>
+                        <h5 class="font-bold text-sm text-slate-900 mt-1 truncate">${v.title}</h5>
+                        <p class="text-xs text-slate-500 truncate">${v.url}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="editCMSVideo(${idx})" class="px-3 py-1.5 rounded-xl bg-white hover:bg-sky-50 border border-slate-300 text-brand-blue text-xs font-bold">Sửa</button>
+                        <button onclick="deleteCMSVideo(${idx})" class="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-50 border border-slate-300 text-rose-600 text-xs font-bold">Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCMSVideo(idx) {
+            const v = siteData.videos[idx];
+            document.getElementById('cms-edit-video-index').value = idx;
+            document.getElementById('cms-video-form-title').textContent = `Đang chỉnh sửa Video #${idx + 1}`;
+            document.getElementById('cms-vid-submit-text').textContent = 'Cập Nhật Video';
+            document.getElementById('cms-vid-title').value = v.title;
+            document.getElementById('cms-vid-duration').value = v.duration;
+            document.getElementById('cms-vid-url').value = v.url;
+            document.getElementById('cms-vid-thumb').value = v.thumbnail;
+            document.getElementById('cms-vid-desc').value = v.desc;
+        }
+
+        function resetCMSVideoForm() {
+            document.getElementById('cms-edit-video-index').value = -1;
+            document.getElementById('cms-video-form-title').textContent = 'Thêm Video Giới Thiệu Mới';
+            document.getElementById('cms-vid-submit-text').textContent = 'Thêm Vào Danh Sách Video';
+            document.getElementById('cms-vid-title').value = '';
+            document.getElementById('cms-vid-duration').value = '';
+            document.getElementById('cms-vid-url').value = '';
+            document.getElementById('cms-vid-thumb').value = '';
+            document.getElementById('cms-vid-desc').value = '';
+        }
+
+        function saveCMSVideo() {
+            const idx = parseInt(document.getElementById('cms-edit-video-index').value, 10);
+            const title = document.getElementById('cms-vid-title').value.trim();
+            const url = document.getElementById('cms-vid-url').value.trim();
+            if (!title || !url) {
+                showToast('Thiếu thông tin', 'Vui lòng nhập đầy đủ Tiêu đề và Đường dẫn Video.');
+                return;
+            }
+            const videoObj = {
+                id: 'vid_' + Date.now(),
+                title,
+                duration: document.getElementById('cms-vid-duration').value.trim() || '03:00',
+                url,
+                thumbnail: document.getElementById('cms-vid-thumb').value.trim() || 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=400&q=80',
+                desc: document.getElementById('cms-vid-desc').value.trim() || 'Video giới thiệu quy trình nuôi cá tầm đạt chuẩn VietGAP.'
+            };
+
+            if (idx >= 0) {
+                siteData.videos[idx] = videoObj;
+            } else {
+                siteData.videos.push(videoObj);
+            }
+            resetCMSVideoForm();
+            renderCMSVideosList();
+            persistSiteData();
+            showToast('Đã cập nhật danh sách Video!', 'Trình phát video trên trang đã được làm mới.');
+        }
+
+        function deleteCMSVideo(idx) {
+            if (siteData.videos.length <= 1) {
+                showToast('Không thể xóa', 'Cần giữ lại ít nhất 1 video giới thiệu trên trang.');
+                return;
+            }
+            siteData.videos.splice(idx, 1);
+            renderCMSVideosList();
+            persistSiteData();
+            showToast('Đã xóa video', 'Danh sách video đã được cập nhật.');
+        }
+
+        // --- Quản lý Đại lý trong CMS ---
+        function renderCMSDealersList() {
+            document.getElementById('cms-dealers-count').textContent = siteData.dealers.length;
+            const listEl = document.getElementById('cms-dealers-list');
+            const regionNames = { north: 'Miền Bắc', central: 'Miền Trung', south: 'Miền Nam' };
+
+            listEl.innerHTML = siteData.dealers.map((d, idx) => `
+                <div class="p-3.5 rounded-2xl border border-slate-200 bg-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-brand-aqua text-brand-teal text-[10px] font-bold px-2 py-0.5 rounded-md">${regionNames[d.region] || 'Toàn quốc'}</span>
+                            <span class="text-xs font-bold text-slate-700">${d.phone}</span>
+                        </div>
+                        <h5 class="font-bold text-sm text-slate-900 mt-1">${d.name}</h5>
+                        <p class="text-xs text-slate-500 truncate">${d.address}</p>
+                    </div>
+                    <div class="flex items-center gap-2 shrink-0">
+                        <button onclick="editCMSDealer(${idx})" class="px-3 py-1.5 rounded-xl bg-white hover:bg-sky-50 border border-slate-300 text-brand-blue text-xs font-bold">Sửa</button>
+                        <button onclick="deleteCMSDealer(${idx})" class="px-3 py-1.5 rounded-xl bg-white hover:bg-rose-50 border border-slate-300 text-rose-600 text-xs font-bold">Xóa</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCMSDealer(idx) {
+            const d = siteData.dealers[idx];
+            document.getElementById('cms-edit-dealer-index').value = idx;
+            document.getElementById('cms-dealer-form-title').textContent = `Đang chỉnh sửa Đại lý: ${d.name}`;
+            document.getElementById('cms-dl-submit-text').textContent = 'Cập Nhật Đại Lý';
+            document.getElementById('cms-dl-name').value = d.name;
+            document.getElementById('cms-dl-region').value = d.region;
+            document.getElementById('cms-dl-phone').value = d.phone;
+            document.getElementById('cms-dl-type').value = d.type;
+            document.getElementById('cms-dl-capacity').value = d.capacity;
+            document.getElementById('cms-dl-instock').value = String(d.inStock);
+            document.getElementById('cms-dl-address').value = d.address;
+        }
+
+        function resetCMSDealerForm() {
+            document.getElementById('cms-edit-dealer-index').value = -1;
+            document.getElementById('cms-dealer-form-title').textContent = 'Thêm Điểm Bán / Đại Lý Phân Phối Mới';
+            document.getElementById('cms-dl-submit-text').textContent = 'Lưu Đại Lý';
+            document.getElementById('cms-dl-name').value = '';
+            document.getElementById('cms-dl-phone').value = '';
+            document.getElementById('cms-dl-type').value = '';
+            document.getElementById('cms-dl-capacity').value = '';
+            document.getElementById('cms-dl-address').value = '';
+        }
+
+        function saveCMSDealer() {
+            const idx = parseInt(document.getElementById('cms-edit-dealer-index').value, 10);
+            const name = document.getElementById('cms-dl-name').value.trim();
+            const phone = document.getElementById('cms-dl-phone').value.trim();
+            const address = document.getElementById('cms-dl-address').value.trim();
+
+            if (!name || !phone || !address) {
+                showToast('Thiếu thông tin', 'Vui lòng nhập Tên đại lý, Số điện thoại và Địa chỉ.');
+                return;
+            }
+
+            const dealerObj = {
+                name,
+                region: document.getElementById('cms-dl-region').value,
+                phone,
+                type: document.getElementById('cms-dl-type').value.trim() || 'Đại lý phân phối chính thức',
+                capacity: document.getElementById('cms-dl-capacity').value.trim() || 'Sẵn cá tươi sống sục oxy',
+                inStock: document.getElementById('cms-dl-instock').value === 'true',
+                address
+            };
+
+            if (idx >= 0) {
+                siteData.dealers[idx] = dealerObj;
+            } else {
+                siteData.dealers.unshift(dealerObj);
+            }
+            resetCMSDealerForm();
+            renderCMSDealersList();
+            persistSiteData();
+            showToast('Đã lưu thông tin Đại lý!', 'Danh sách đại lý phân phối đã được cập nhật.');
+        }
+
+        function deleteCMSDealer(idx) {
+            siteData.dealers.splice(idx, 1);
+            renderCMSDealersList();
+            persistSiteData();
+            showToast('Đã xóa đại lý', 'Danh sách điểm bán đã được cập nhật.');
+        }
+
+        // --- Quản lý Đầu mối & Bảng giá trong CMS ---
+        function renderCMSContactsEditor() {
+            const container = document.getElementById('cms-contacts-editor');
+            container.innerHTML = siteData.contacts.map((c, idx) => `
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2.5">
+                    <span class="inline-block text-[11px] font-bold text-brand-teal bg-brand-aqua px-2.5 py-0.5 rounded-full">Đầu mối #${idx + 1}: ${c.badge}</span>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600">Họ tên người phụ trách</label>
+                        <input type="text" id="cms-ct-name-${idx}" value="${c.name}" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600">Chức vụ</label>
+                        <input type="text" id="cms-ct-role-${idx}" value="${c.role}" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600">Số điện thoại / Zalo</label>
+                        <input type="text" id="cms-ct-phone-${idx}" value="${c.phone}" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs font-bold">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-semibold text-slate-600">Mô tả nhiệm vụ</label>
+                        <textarea id="cms-ct-desc-${idx}" rows="2" class="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-xs">${c.desc}</textarea>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function saveCMSContactsAndPrices() {
+            siteData.prices.standard = parseInt(document.getElementById('edit-price-standard').value, 10) || 210000;
+            siteData.prices.large = parseInt(document.getElementById('edit-price-large').value, 10) || 230000;
+            siteData.prices.fillet = parseInt(document.getElementById('edit-price-fillet').value, 10) || 260000;
+            siteData.prices.fingerling = parseInt(document.getElementById('edit-price-fingerling').value, 10) || 18000;
+
+            siteData.general.farmAddress = document.getElementById('edit-farm-address').value.trim();
+            siteData.general.hubAddress = document.getElementById('edit-hub-address').value.trim();
+            siteData.general.farmEmail = document.getElementById('edit-farm-email').value.trim();
+            siteData.general.workingHours = document.getElementById('edit-working-hours').value.trim();
+
+            siteData.contacts.forEach((c, idx) => {
+                c.name = document.getElementById(`cms-ct-name-${idx}`).value.trim() || c.name;
+                c.role = document.getElementById(`cms-ct-role-${idx}`).value.trim() || c.role;
+                c.phone = document.getElementById(`cms-ct-phone-${idx}`).value.trim() || c.phone;
+                c.desc = document.getElementById(`cms-ct-desc-${idx}`).value.trim() || c.desc;
+                const cleanPhone = c.phone.replace(/\./g, '').replace(/\s+/g, '');
+                if (!c.secondaryHref.startsWith('mailto:')) {
+                    c.secondaryHref = `https://zalo.me/${cleanPhone}`;
+                }
+            });
+
+            persistSiteData();
+            showToast('Đã lưu Đầu mối & Bảng giá!', 'Công cụ dự toán và danh bạ liên hệ đã được cập nhật.');
+        }
+
+        // --- Xuất bản HTML tĩnh & Sao lưu JSON ---
+        function exportJSONData() {
+            const dataStr = JSON.stringify(siteData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `catam-vietgap-backup-${new Date().toISOString().slice(0, 10)}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Đã xuất tệp JSON', 'Tệp sao lưu cấu hình đã được tải xuống máy của bạn.');
+        }
+
+        function importJSONData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if (imported && imported.general && imported.dealers) {
+                        siteData = imported;
+                        persistSiteData();
+                        populateCMSForms();
+                        showToast('Khôi phục thành công!', 'Toàn bộ dữ liệu từ tệp JSON đã được áp dụng lên trang web.');
+                    } else {
+                        showToast('Tệp không hợp lệ', 'Cấu trúc tệp JSON không khớp với dữ liệu trang trại.');
+                    }
+                } catch (err) {
+                    showToast('Lỗi đọc tệp', 'Không thể đọc nội dung tệp JSON này.');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function exportUpdatedHTML() {
+            // Đóng tạm các modal trước khi chụp mã nguồn HTML sạch
+            const wasCMSOpen = !document.getElementById('admin-cms-modal').classList.contains('hidden');
+            document.getElementById('admin-cms-modal').classList.add('hidden');
+            document.getElementById('admin-login-modal').classList.add('hidden');
+            document.getElementById('admin-top-bar').classList.add('hidden');
+            document.getElementById('main-header').classList.add('top-0');
+            document.getElementById('main-header').classList.remove('top-[42px]');
+
+            let htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const serializedData = JSON.stringify(siteData, null, 12);
+            htmlContent = htmlContent.replace(
+                /\/\* CMS_DATA_START \*\/[\s\S]*?\/\* CMS_DATA_END \*\//,
+                `/* CMS_DATA_START */\n        const DEFAULT_SITE_DATA = ${serializedData};\n        /* CMS_DATA_END */`
+            );
+
+            // Khôi phục lại giao diện Admin hiện tại
+            updateAdminUIState();
+            if (wasCMSOpen) {
+                document.getElementById('admin-cms-modal').classList.remove('hidden');
+            }
+
+            const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'index.html';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Đã xuất tệp index.html!', 'Bạn chỉ cần tải file index.html vừa tải về lên GitHub Pages để cập nhật cho toàn bộ người dùng.');
+        }
+
+        function changeAdminPassword() {
+            const newPass = document.getElementById('cms-new-password').value.trim();
+            if (newPass.length < 6) {
+                showToast('Mật khẩu quá ngắn', 'Vui lòng nhập mật khẩu mới có ít nhất 6 ký tự.');
+                return;
+            }
+            siteData.adminCredentials.password = newPass;
+            document.getElementById('cms-new-password').value = '';
+            persistSiteData();
+            showToast('Đã đổi mật khẩu!', 'Mật khẩu quản trị mới đã được lưu an toàn.');
+        }
+
+        function resetToDefaultData() {
+            localStorage.removeItem(STORAGE_KEY);
+            siteData = JSON.parse(JSON.stringify(DEFAULT_SITE_DATA));
+            applySiteDataToUI();
+            populateCMSForms();
+            showToast('Đã khôi phục mặc định', 'Trang web đã quay về nội dung chuẩn ban đầu.');
+        }
+
+        /* =========================================================================
+           5. ĐIỀU KHIỂN CHUYỂN ĐỔI TAB & CHẾ ĐỘ XEM TOÀN TRANG
+           ========================================================================= */
+        function switchTab(tabId) {
+            // Tắt chế độ xem toàn trang nếu đang bật để tập trung vào Tab được chọn
+            isFullPageMode = false;
+            updateViewAllButtonUI();
+
+            const allTabs = ['intro', 'dealers', 'contact'];
+            allTabs.forEach(id => {
+                const section = document.getElementById(`tab-${id}`);
+                const deskBtn = document.getElementById(`nav-btn-${id}`);
+                const mobBtn = document.getElementById(`mob-btn-${id}`);
+
+                if (id === tabId) {
+                    section.classList.remove('hidden');
+                    section.classList.add('block');
+                    if (deskBtn) {
+                        deskBtn.classList.add('bg-brand-teal', 'text-white', 'shadow-sm');
+                        deskBtn.classList.remove('text-slate-600');
+                    }
+                    if (mobBtn) {
+                        mobBtn.classList.add('bg-brand-teal', 'text-white');
+                        mobBtn.classList.remove('bg-slate-100', 'text-slate-700');
+                    }
+                } else {
+                    section.classList.add('hidden');
+                    section.classList.remove('block');
+                    if (deskBtn) {
+                        deskBtn.classList.remove('bg-brand-teal', 'text-white', 'shadow-sm');
+                        deskBtn.classList.add('text-slate-600');
+                    }
+                    if (mobBtn) {
+                        mobBtn.classList.remove('bg-brand-teal', 'text-white');
+                        mobBtn.classList.add('bg-slate-100', 'text-slate-700');
+                    }
+                }
+            });
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleFullPageMode() {
+            isFullPageMode = !isFullPageMode;
+            updateViewAllButtonUI();
+
+            const allTabs = ['intro', 'dealers', 'contact'];
+            if (isFullPageMode) {
+                allTabs.forEach(id => {
+                    const section = document.getElementById(`tab-${id}`);
+                    section.classList.remove('hidden');
+                    section.classList.add('block');
+                });
+                showToast('Chế độ xem toàn trang', 'Đang hiển thị đầy đủ cả 3 phần trên cùng một trang cuộn.');
+            } else {
+                switchTab('intro');
+            }
+        }
+
+        function updateViewAllButtonUI() {
+            const btnDesk = document.getElementById('btn-view-all');
+            const btnMob = document.getElementById('mob-btn-view-all');
+            if (isFullPageMode) {
+                btnDesk.classList.add('bg-brand-aqua', 'border-brand-teal', 'text-brand-teal');
+                btnDesk.innerHTML = '<i class="ph-bold ph-tabs"></i> <span>Xem theo Tab</span>';
+                btnMob.classList.add('bg-brand-aqua', 'border-brand-teal', 'text-brand-teal');
+            } else {
+                btnDesk.classList.remove('bg-brand-aqua', 'border-brand-teal', 'text-brand-teal');
+                btnDesk.innerHTML = '<i class="ph-bold ph-rows"></i> <span>Xem tất cả</span>';
+                btnMob.classList.remove('bg-brand-aqua', 'border-brand-teal', 'text-brand-teal');
+            }
+        }
+
+        /* =========================================================================
+           6. TRÌNH PHÁT VIDEO & CHUYỂN ĐỔI PLAYLIST
+           ========================================================================= */
+        function renderPlaylist(activeIndex = 0) {
+            const playlistEl = document.getElementById('video-playlist');
+            playlistEl.innerHTML = siteData.videos.map((vid, idx) => {
+                const isActive = idx === activeIndex;
+                return `
+                    <div onclick="playFarmVideo(${idx})" 
+                         class="cursor-pointer p-3 rounded-2xl border transition-all flex gap-3 items-center ${isActive ? 'bg-brand-aqua border-brand-teal shadow-sm' : 'bg-slate-50 hover:bg-slate-100 border-slate-200'}">
+                        <div class="relative w-24 h-16 rounded-xl overflow-hidden shrink-0 bg-slate-800">
+                            <img src="${vid.thumbnail}" onerror="this.src='https://placehold.co/200x130/0f4c5c/ffffff?text=Video'" alt="${vid.title}" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <i class="ph-fill ${isActive ? 'ph-speaker-high text-emerald-300' : 'ph-play text-white'} text-lg"></i>
+                            </div>
+                        </div>
+                        <div class="min-w-0 flex-1">
+                            <div class="flex items-center justify-between gap-1">
+                                <span class="text-[10px] font-bold uppercase ${isActive ? 'text-brand-teal' : 'text-slate-400'}">
+                                    ${isActive ? 'Đang phát' : 'Video ' + (idx + 1)}
+                                </span>
+                                <span class="text-[11px] text-slate-500 font-medium">${vid.duration}</span>
+                            </div>
+                            <h4 class="font-bold text-xs sm:text-sm text-slate-900 line-clamp-2 mt-0.5 leading-snug">
+                                ${vid.title}
+                            </h4>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function playFarmVideo(index) {
+            const video = siteData.videos[index] || siteData.videos[0];
+            if (!video) return;
+            const container = document.getElementById('video-player-container');
+            document.getElementById('current-video-title').textContent = video.title;
+            document.getElementById('current-video-desc').textContent = video.desc;
+
+            renderVideoElement(container, video.url, video.thumbnail);
+            renderPlaylist(index);
+        }
+
+        function renderVideoElement(container, url, poster = '') {
+            // Tự động nhận diện link YouTube để chuyển sang iframe embed chuẩn
+            const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+            if (ytMatch && ytMatch[1]) {
+                const embedUrl = `https://www.youtube.com/embed/${ytMatch[1]}?autoplay=1&rel=0`;
+                container.innerHTML = `<iframe src="${embedUrl}" title="Video Trang Trại Cá Tầm" class="w-full h-full border-0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                container.innerHTML = `
+                    <video controls autoplay muted loop playsinline poster="${poster}" class="w-full h-full object-cover">
+                        <source src="${url}" type="video/mp4">
+                        Trình duyệt của bạn không hỗ trợ phát video trực tiếp.
+                    </video>
+                `;
+            }
+        }
+
+        function toggleVideoConfigModal() {
+            const modal = document.getElementById('video-config-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        function applyCustomVideo() {
+            const title = document.getElementById('custom-video-title').value.trim() || 'Video Thực Tế Trang Trại Cá Tầm';
+            const url = document.getElementById('custom-video-url').value.trim();
+            if (!url) {
+                showToast('Thiếu đường dẫn', 'Vui lòng dán đường dẫn YouTube hoặc file MP4 hợp lệ.');
+                return;
+            }
+            const container = document.getElementById('video-player-container');
+            document.getElementById('current-video-title').textContent = title;
+            document.getElementById('current-video-desc').textContent = 'Video thực tế được cập nhật trực tiếp từ trang trại.';
+            renderVideoElement(container, url);
+            toggleVideoConfigModal();
+            showToast('Đã cập nhật video', 'Trình phát đã chuyển sang video thực tế của bạn.');
+        }
+
+        /* =========================================================================
+           7. BỘ LỌC & TÌM KIẾM HỆ THỐNG ĐẠI LÝ PHÂN PHỐI
+           ========================================================================= */
+        function renderDealers() {
+            const grid = document.getElementById('dealers-grid');
+            const keyword = document.getElementById('dealer-search-input').value.toLowerCase().trim();
+            const regionLabels = {
+                north: 'Hà Nội & Miền Bắc',
+                central: 'Đà Nẵng & Miền Trung',
+                south: 'TP.HCM & Miền Nam'
+            };
+
+            const filtered = siteData.dealers.filter(d => {
+                const rLabel = regionLabels[d.region] || '';
+                const matchRegion = currentRegionFilter === 'all' || d.region === currentRegionFilter;
+                const matchKeyword = d.name.toLowerCase().includes(keyword) || 
+                                     d.address.toLowerCase().includes(keyword) ||
+                                     rLabel.toLowerCase().includes(keyword);
+                return matchRegion && matchKeyword;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full bg-white rounded-3xl p-10 text-center border border-slate-200">
+                        <i class="ph-duotone ph-magnifying-glass text-4xl text-slate-400 mb-2"></i>
+                        <h3 class="font-bold text-slate-800">Không tìm thấy đại lý phù hợp</h3>
+                        <p class="text-sm text-slate-500 mt-1">Vui lòng thử từ khóa khác hoặc gọi trực tiếp Hotline ${siteData.general.mainHotline} để được giao tận nơi.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(dealer => {
+                const rLabel = regionLabels[dealer.region] || 'Toàn quốc';
+                const statusBadge = dealer.inStock !== false
+                    ? `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-brand-vietgap bg-brand-vietgapLight px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-brand-vietgap"></span> Sẵn cá tươi sống</span>`
+                    : `<span class="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full"><span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span> Đặt trước theo chuyến</span>`;
+
+                return `
+                <div class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-lg hover:border-brand-teal/40 transition-all flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="text-[11px] font-bold px-2.5 py-1 rounded-lg bg-brand-aqua text-brand-teal">
+                                ${rLabel}
+                            </span>
+                            ${statusBadge}
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900 leading-snug">${dealer.name}</h3>
+                        <p class="text-xs font-medium text-slate-500 mt-0.5">${dealer.type}</p>
+                        
+                        <div class="mt-4 space-y-2 text-xs sm:text-sm text-slate-600">
+                            <p class="flex items-start gap-2">
+                                <i class="ph-fill ph-map-pin text-brand-teal text-base shrink-0 mt-0.5"></i>
+                                <span>${dealer.address}</span>
+                            </p>
+                            <p class="flex items-center gap-2">
+                                <i class="ph-fill ph-package text-brand-blue text-base shrink-0"></i>
+                                <span>Quy mô: <strong>${dealer.capacity}</strong></span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 pt-4 border-t border-slate-100 flex items-center gap-2">
+                        <a href="tel:${dealer.phone.replace(/\./g, '')}" class="flex-1 py-2.5 px-3 rounded-xl bg-brand-teal hover:bg-brand-tealDark text-white text-xs font-bold flex items-center justify-center gap-1.5 transition-colors">
+                            <i class="ph-fill ph-phone-call"></i> ${dealer.phone}
+                        </a>
+                        <a href="https://maps.google.com/?q=${encodeURIComponent(dealer.address)}" target="_blank" rel="noopener" title="Xem bản đồ" class="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors">
+                            <i class="ph-bold ph-map-trifold text-base"></i>
+                        </a>
+                    </div>
+                </div>
+            `}).join('');
+        }
+
+        function filterDealers(region) {
+            currentRegionFilter = region;
+            document.querySelectorAll('.region-btn').forEach(btn => {
+                if (btn.dataset.region === region) {
+                    btn.classList.add('bg-brand-teal', 'text-white');
+                    btn.classList.remove('bg-slate-100', 'text-slate-700');
+                } else {
+                    btn.classList.remove('bg-brand-teal', 'text-white');
+                    btn.classList.add('bg-slate-100', 'text-slate-700');
+                }
+            });
+            renderDealers();
+        }
+
+        function searchDealers() {
+            renderDealers();
+        }
+
+        /* =========================================================================
+           6. DỰ TOÁN ĐƠN HÀNG & XỬ LÝ BIỂU MẪU
+           ========================================================================= */
+        function calculateOrderEstimate() {
+            const productSelect = document.getElementById('order-product');
+            const packagingSelect = document.getElementById('order-packaging');
+            const quantityInput = document.getElementById('order-quantity');
+
+            const unitPrice = parseInt(productSelect.value, 10) || 0;
+            const packFee = parseInt(packagingSelect.value, 10) || 0;
+            const qty = Math.max(1, parseInt(quantityInput.value, 10) || 1);
+
+            // Nếu chọn cá giống (18.000đ/con) thì không cộng phí sơ chế
+            const finalUnit = unitPrice < 50000 ? unitPrice : (unitPrice + packFee);
+            const total = finalUnit * qty;
+
+            document.getElementById('order-estimate-total').textContent = total.toLocaleString('vi-VN') + ' đ';
+        }
+
+        function goToOrderWithProduct(productLabel) {
+            switchTab('contact');
+            const select = document.getElementById('order-product');
+            for (let i = 0; i < select.options.length; i++) {
+                if (select.options[i].text.includes(productLabel.substring(0, 15))) {
+                    select.selectedIndex = i;
+                    break;
+                }
+            }
+            calculateOrderEstimate();
+            setTimeout(() => {
+                document.getElementById('order-quantity').focus();
+            }, 300);
+        }
+
+        function handleDealerSubmit(e) {
+            e.preventDefault();
+            e.target.reset();
+            showToast('Đã gửi đăng ký đại lý!', 'Bộ phận Kinh doanh trang trại sẽ liên hệ gửi bảng chiết khấu sỉ qua Zalo trong 15 phút.');
+        }
+
+        function handleQuickOrderSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('order-customer-name').value;
+            const total = document.getElementById('order-estimate-total').textContent;
+            e.target.reset();
+            calculateOrderEstimate();
+            showToast('Đã tiếp nhận đơn đặt hàng!', `Cảm ơn ${name}. Đơn hàng dự toán (${total}) đã được chuyển tới bộ phận điều phối xe oxy.`);
+        }
+
+        /* =========================================================================
+           7. THÔNG BÁO TOAST THÂN THIỆN
+           ========================================================================= */
+        let toastTimeout;
+        function showToast(title, message) {
+            const toast = document.getElementById('toast-notification');
+            document.getElementById('toast-title').textContent = title;
+            document.getElementById('toast-message').textContent = message;
+            toast.classList.remove('hidden');
+
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 5000);
+        }
+
+        /* =========================================================================
+           KHỞI TẠO DỮ LIỆU KHI TẢI TRANG
+           ========================================================================= */
+        window.onload = function () {
+            applySiteDataToUI();
+        };
+    </script>
+</body>
+</html>
